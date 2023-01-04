@@ -3093,8 +3093,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#cecece",
   },
-
-
-
 });
 export default styles;

@@ -54,6 +54,7 @@ import { capitalize } from "../../utils/Util";
 import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Priority from "../../component/tasks/AddTodo/Priority";
+import ScannerButton from "../../component/ScannerButton";
 
 export default class AddObservation extends React.Component {
   static contextType = AppContext;
@@ -148,24 +149,24 @@ export default class AddObservation extends React.Component {
       selectionTypeName: props.route.params?.item?.ref
         ? capitalize(props.route.params.item.ref)
         : props.route.params.selectionType
-        ? capitalize(props.route.params.selectionType)
-        : "",
+          ? capitalize(props.route.params.selectionType)
+          : "",
       isSelectionTypeMenuOpen: false,
       selectionTypeId: props.route.params?.item?.ref
         ? props.route.params.item.ref
         : props.route.params.selectionType
-        ? props.route.params.selectionType
-        : undefined,
+          ? props.route.params.selectionType
+          : undefined,
       ref_id: props.route.params?.item?.ref_id
         ? props.route.params.item.ref_id
         : props.route.params.ref_id
-        ? props.route.params.ref_id
-        : undefined,
+          ? props.route.params.ref_id
+          : undefined,
       ref_name: props.route.params?.item?.ref_value
         ? props.route.params.item.ref_value
         : props.route.params.ref_name
-        ? props.route.params.ref_name
-        : undefined,
+          ? props.route.params.ref_name
+          : undefined,
       isrefMenuOpen: false,
 
       isNotifyMenuOpen: false,
@@ -188,13 +189,13 @@ export default class AddObservation extends React.Component {
       section_id: props.route.params?.grand_parent_id
         ? props.route.params?.grand_parent_id
         : props.route.params?.parent_id
-        ? props.route.params?.parent_id
-        : "",
+          ? props.route.params?.parent_id
+          : "",
       section_name: props.route.params?.grand_parent_name
         ? props.route.params?.grand_parent_name
         : props.route.params?.parent_name
-        ? props.route.params?.parent_name
-        : "",
+          ? props.route.params?.parent_name
+          : "",
       enclosure_id: props.route.params?.grand_parent_id
         ? props.route.params?.parent_id
         : "",
@@ -838,14 +839,14 @@ export default class AddObservation extends React.Component {
           ref_id: scanData.enclosure_db_id
             ? scanData.enclosure_db_id
             : scanData.animal_code
-            ? scanData.animal_code
-            : scanData.section_id,
+              ? scanData.animal_code
+              : scanData.section_id,
 
           ref_name: scanData.animal_code
             ? scanData?.common_name
             : scanData.enclosure_id
-            ? scanData.enclosure_id
-            : scanData.section,
+              ? scanData.enclosure_id
+              : scanData.section,
 
           section_id: scanData.section_id,
 
@@ -876,7 +877,7 @@ export default class AddObservation extends React.Component {
   };
 
   render = () => (
-    <SafeAreaView>
+    <Container>
       <OverlayLoader visible={this.state.showLoader} />
       <Header
         title={
@@ -884,7 +885,7 @@ export default class AddObservation extends React.Component {
             ? "Edit Observation"
             : "Report Observation"
         }
-        showRelatedScanButton={true}
+        // showRelatedScanButton={true}
         openRelatedScaner={this.openRelatedScaner}
       />
       <View style={styles.body}>
@@ -955,237 +956,7 @@ export default class AddObservation extends React.Component {
                     ]}
                   />
                 ) : // </View>
-                null}
-
-                {this.state.selectionTypeId == "enclosure" ? (
-                  <>
-                    {/* <View style={styles.inputContainer}> */}
-                    <InputDropdown
-                      label={"Section"}
-                      value={this.state.section_name}
-                      isOpen={this.state.isSectionMenuOpen}
-                      items={this.state.sections}
-                      openAction={this.toggleSectionMenu}
-                      closeAction={this.toggleSectionMenu}
-                      setValue={this.setSection}
-                      // placeholder="Select Sections"
-                      labelStyle={styles.labelName}
-                      textFieldStyle={styles.textfield}
-                      style={[styles.fieldBox]}
-                    />
-                    {/* </View> */}
-                    {/* <View style={styles.inputContainer}> */}
-                    <InputDropdown
-                      label={"Enclosures"}
-                      value={this.state.ref_name}
-                      isOpen={this.state.isrefMenuOpen}
-                      items={this.state.enclosuress}
-                      openAction={this.togglerefMenu}
-                      closeAction={this.togglerefMenu}
-                      setValue={this.setref}
-                      // placeholder="Select Enclosures"
-                      labelStyle={styles.labelName}
-                      textFieldStyle={styles.textfield}
-                      style={[
-                        styles.fieldBox,
-                        this.state.hasRefValidationError
-                          ? styles.errorFieldBox
-                          : null,
-                      ]}
-                    />
-                    {/* </View> */}
-                  </>
-                ) : null}
-
-                {this.state.selectionTypeId == "animal" ? (
-                  this.state.id == 0 ? (
-                    <>
-                      {/* <View style={styles.inputContainer}> */}
-                      <InputDropdown
-                        label={"Section"}
-                        value={this.state.section_name}
-                        isOpen={this.state.isSectionMenuOpen}
-                        items={this.state.sections}
-                        openAction={this.toggleSectionMenu}
-                        closeAction={this.toggleSectionMenu}
-                        setValue={this.setSection}
-                        // placeholder="Select Sections"
-                        labelStyle={styles.labelName}
-                        textFieldStyle={styles.textfield}
-                        style={[styles.fieldBox]}
-                      />
-                      {/* </View> */}
-                      {/* <View style={styles.inputContainer}> */}
-                      <InputDropdown
-                        label={"Enclosures"}
-                        value={this.state.enclosure_name}
-                        isOpen={this.state.isEnclosureMenuOpen}
-                        items={this.state.enclosuress}
-                        openAction={this.toggleEnclosureMenu}
-                        closeAction={this.toggleEnclosureMenu}
-                        setValue={this.setEnclosure}
-                        // placeholder="Select Enclosures"
-                        labelStyle={styles.labelName}
-                        textFieldStyle={styles.textfield}
-                        style={[styles.fieldBox]}
-                      />
-                      {/* </View> */}
-                    </>
-                  ) : null
-                ) : null}
-
-                {this.state.selectionTypeId == "animal" ? (
-                  // <View style={styles.inputContainer}>
-                  <InputDropdown
-                    label={"Animals"}
-                    value={this.state.ref_name}
-                    isOpen={this.state.isrefMenuOpen}
-                    items={this.state.animals}
-                    openAction={this.togglerefMenu}
-                    closeAction={this.togglerefMenu}
-                    setValue={this.setref}
-                    // placeholder="Select Animals"
-                    labelStyle={styles.labelName}
-                    textFieldStyle={styles.textfield}
-                    style={[
-                    styles.fieldBox,
-                    this.state.hasRefValidationError
-                      ? styles.errorFieldBox
-                      : null,
-                  ]}
-                  />
-                ) : // </View>
-                null}
-              </>
-            ) : null}
-            {/* <InputDropdown
-              label={"Observation Types"}
-              value={this.state.typeName}
-              isOpen={this.state.isObservationTypeMenuOpen}
-              items={this.state.incidentTypes}
-              openAction={this.toggleObservationTypeMenu}
-              closeAction={this.toggleObservationTypeMenu}
-              setValue={this.setObservationTypeData}
-              // placeholder="Select Observation Types"
-              labelStyle={styles.labelName}
-              textFieldStyle={styles.textfield}
-              style={[
-                styles.fieldBox,
-                this.state.hasObservationTypesValidationError
-                  ? styles.errorFieldBox
-                  : null,
-              ]}
-              // extraIcon={<Ionicons name="add-circle" color={Colors.primary} size={22} />}
-              // extraFunc={this.addObservationTypes}
-            /> */}
-
-            {/* </View> */}
-            {/* <View style={[styles.fieldBox]}>
-              <Text style={styles.labelName}>
-                Name
-                <Text style={{ fontSize: 12 }}> {"(Short Desc):"}</Text>
-              </Text>
-              <TextInput
-                value={this.state.shortdesc}
-                onChangeText={(text) => this.setState({ shortdesc: text })}
-                style={[styles.textfield, { width: "60%" }]}
-                autoCompleteType="off"
-                // placeholder="Enter Observation Name"
-                autoCapitalize="words"
-                maxLength={30}
-              />
-            </View> */}
-
-            <View
-              style={[
-                styles.fieldBox,
-                this.state.hasObservationValidationError
-                  ? styles.errorFieldBox
-                  : null,
-              ]}
-            >
-              <Text style={styles.labelName}>Observation:</Text>
-              <TextInput
-                multiline={true}
-                value={this.state.observation}
-                onChangeText={(text) =>
-                  this.setState({
-                    observation: text,
-                    hasObservationValidationError: false,
-                  })
-                }
-                style={[styles.textfield, { width: "60%" }]}
-                autoCompleteType="off"
-                autoCapitalize="words"
-                maxLength={120}
-                // placeholder="Enter Observation Observation"
-              />
-            </View>
-
-            {/* <View style={[styles.inputContainer, styles.pb0, styles.mb0]}>
-                        <View style={styles.flexRow}>
-                            <View style={[styles.fiftyWidth, styles.centerY]}>
-                                <Text style={styles.name}>Short Observation</Text>
-                            </View>
-                            <View style={styles.fiftyWidth}>
-                                <TextInput
-                                    style={styles.inputTextArea}
-                                    value={this.state.shortdesc}
-                                    onChangeText={(shortdesc) => this.setState({ shortdesc })}
-                                    autoCapitalize="words"
-                                    autoCompleteType="off"
-                                />
-                            </View>
-                        </View>
-                        {this.state.hasObservationValidationError ? (
-                            <Text style={styles.errorText}>Solution can not be blank</Text>
-                        ) : null}
-                    </View> */}
-            {/* <View style={[styles.inputContainer, styles.pb0, styles.mb0]}> */}
-            {this.props.route.params?.prefilled ? null : (
-              <>
-                <InputDropdown
-                  label={"Related To"}
-                  value={this.state.selectionTypeName}
-                  isOpen={this.state.isSelectionTypeMenuOpen}
-                  items={this.state.selectionTypes}
-                  openAction={this.toggleSelectionTypeMenu}
-                  closeAction={this.toggleSelectionTypeMenu}
-                  setValue={this.setSelectionTypeData}
-                  // placeholder="Select Observation Related To"
-                  labelStyle={styles.labelName}
-                  textFieldStyle={styles.textfield}
-                  style={[
-                    styles.fieldBox,
-                    this.state.hasTypeValidationError
-                      ? styles.errorFieldBox
-                      : null,
-                  ]}
-                />
-                {/* </View> */}
-
-                {this.state.selectionTypeId == "section" ? (
-                  // <View style={styles.inputContainer}>
-                  <InputDropdown
-                    label={"Sections"}
-                    value={this.state.ref_name}
-                    isOpen={this.state.isrefMenuOpen}
-                    items={this.state.sections}
-                    openAction={this.togglerefMenu}
-                    closeAction={this.togglerefMenu}
-                    setValue={this.setref}
-                    // placeholder="Select Sections"
-                    labelStyle={styles.labelName}
-                    textFieldStyle={styles.textfield}
-                    style={[
-                    styles.fieldBox,
-                    this.state.hasRefValidationError
-                      ? styles.errorFieldBox
-                      : null,
-                  ]}
-                  />
-                ) : // </View>
-                null}
+                  null}
 
                 {this.state.selectionTypeId == "enclosure" ? (
                   <>
@@ -1285,7 +1056,237 @@ export default class AddObservation extends React.Component {
                     ]}
                   />
                 ) : // </View>
-                null}
+                  null}
+              </>
+            ) : null}
+            {/* <InputDropdown
+              label={"Observation Types"}
+              value={this.state.typeName}
+              isOpen={this.state.isObservationTypeMenuOpen}
+              items={this.state.incidentTypes}
+              openAction={this.toggleObservationTypeMenu}
+              closeAction={this.toggleObservationTypeMenu}
+              setValue={this.setObservationTypeData}
+              // placeholder="Select Observation Types"
+              labelStyle={styles.labelName}
+              textFieldStyle={styles.textfield}
+              style={[
+                styles.fieldBox,
+                this.state.hasObservationTypesValidationError
+                  ? styles.errorFieldBox
+                  : null,
+              ]}
+              // extraIcon={<Ionicons name="add-circle" color={Colors.primary} size={22} />}
+              // extraFunc={this.addObservationTypes}
+            /> */}
+
+            {/* </View> */}
+            {/* <View style={[styles.fieldBox]}>
+              <Text style={styles.labelName}>
+                Name
+                <Text style={{ fontSize: 12 }}> {"(Short Desc):"}</Text>
+              </Text>
+              <TextInput
+                value={this.state.shortdesc}
+                onChangeText={(text) => this.setState({ shortdesc: text })}
+                style={[styles.textfield, { width: "60%" }]}
+                autoCompleteType="off"
+                // placeholder="Enter Observation Name"
+                autoCapitalize="words"
+                maxLength={30}
+              />
+            </View> */}
+
+            <View
+              style={[
+                styles.fieldBox,
+                this.state.hasObservationValidationError
+                  ? styles.errorFieldBox
+                  : null,
+              ]}
+            >
+              <Text style={styles.labelName}>Observation:</Text>
+              <TextInput
+                multiline={true}
+                value={this.state.observation}
+                onChangeText={(text) =>
+                  this.setState({
+                    observation: text,
+                    hasObservationValidationError: false,
+                  })
+                }
+                style={[styles.textfield, { width: "60%" }]}
+                autoCompleteType="off"
+                autoCapitalize="words"
+                maxLength={120}
+              // placeholder="Enter Observation Observation"
+              />
+            </View>
+
+            {/* <View style={[styles.inputContainer, styles.pb0, styles.mb0]}>
+                        <View style={styles.flexRow}>
+                            <View style={[styles.fiftyWidth, styles.centerY]}>
+                                <Text style={styles.name}>Short Observation</Text>
+                            </View>
+                            <View style={styles.fiftyWidth}>
+                                <TextInput
+                                    style={styles.inputTextArea}
+                                    value={this.state.shortdesc}
+                                    onChangeText={(shortdesc) => this.setState({ shortdesc })}
+                                    autoCapitalize="words"
+                                    autoCompleteType="off"
+                                />
+                            </View>
+                        </View>
+                        {this.state.hasObservationValidationError ? (
+                            <Text style={styles.errorText}>Solution can not be blank</Text>
+                        ) : null}
+                    </View> */}
+            {/* <View style={[styles.inputContainer, styles.pb0, styles.mb0]}> */}
+            {this.props.route.params?.prefilled ? null : (
+              <>
+                <InputDropdown
+                  label={"Related To"}
+                  value={this.state.selectionTypeName}
+                  isOpen={this.state.isSelectionTypeMenuOpen}
+                  items={this.state.selectionTypes}
+                  openAction={this.toggleSelectionTypeMenu}
+                  closeAction={this.toggleSelectionTypeMenu}
+                  setValue={this.setSelectionTypeData}
+                  // placeholder="Select Observation Related To"
+                  labelStyle={styles.labelName}
+                  textFieldStyle={styles.textfield}
+                  style={[
+                    styles.fieldBox,
+                    this.state.hasTypeValidationError
+                      ? styles.errorFieldBox
+                      : null,
+                  ]}
+                />
+                {/* </View> */}
+
+                {this.state.selectionTypeId == "section" ? (
+                  // <View style={styles.inputContainer}>
+                  <InputDropdown
+                    label={"Sections"}
+                    value={this.state.ref_name}
+                    isOpen={this.state.isrefMenuOpen}
+                    items={this.state.sections}
+                    openAction={this.togglerefMenu}
+                    closeAction={this.togglerefMenu}
+                    setValue={this.setref}
+                    // placeholder="Select Sections"
+                    labelStyle={styles.labelName}
+                    textFieldStyle={styles.textfield}
+                    style={[
+                      styles.fieldBox,
+                      this.state.hasRefValidationError
+                        ? styles.errorFieldBox
+                        : null,
+                    ]}
+                  />
+                ) : // </View>
+                  null}
+
+                {this.state.selectionTypeId == "enclosure" ? (
+                  <>
+                    {/* <View style={styles.inputContainer}> */}
+                    <InputDropdown
+                      label={"Section"}
+                      value={this.state.section_name}
+                      isOpen={this.state.isSectionMenuOpen}
+                      items={this.state.sections}
+                      openAction={this.toggleSectionMenu}
+                      closeAction={this.toggleSectionMenu}
+                      setValue={this.setSection}
+                      // placeholder="Select Sections"
+                      labelStyle={styles.labelName}
+                      textFieldStyle={styles.textfield}
+                      style={[styles.fieldBox]}
+                    />
+                    {/* </View> */}
+                    {/* <View style={styles.inputContainer}> */}
+                    <InputDropdown
+                      label={"Enclosures"}
+                      value={this.state.ref_name}
+                      isOpen={this.state.isrefMenuOpen}
+                      items={this.state.enclosuress}
+                      openAction={this.togglerefMenu}
+                      closeAction={this.togglerefMenu}
+                      setValue={this.setref}
+                      // placeholder="Select Enclosures"
+                      labelStyle={styles.labelName}
+                      textFieldStyle={styles.textfield}
+                      style={[
+                        styles.fieldBox,
+                        this.state.hasRefValidationError
+                          ? styles.errorFieldBox
+                          : null,
+                      ]}
+                    />
+                    {/* </View> */}
+                  </>
+                ) : null}
+
+                {this.state.selectionTypeId == "animal" ? (
+                  this.state.id == 0 ? (
+                    <>
+                      {/* <View style={styles.inputContainer}> */}
+                      <InputDropdown
+                        label={"Section"}
+                        value={this.state.section_name}
+                        isOpen={this.state.isSectionMenuOpen}
+                        items={this.state.sections}
+                        openAction={this.toggleSectionMenu}
+                        closeAction={this.toggleSectionMenu}
+                        setValue={this.setSection}
+                        // placeholder="Select Sections"
+                        labelStyle={styles.labelName}
+                        textFieldStyle={styles.textfield}
+                        style={[styles.fieldBox]}
+                      />
+                      {/* </View> */}
+                      {/* <View style={styles.inputContainer}> */}
+                      <InputDropdown
+                        label={"Enclosures"}
+                        value={this.state.enclosure_name}
+                        isOpen={this.state.isEnclosureMenuOpen}
+                        items={this.state.enclosuress}
+                        openAction={this.toggleEnclosureMenu}
+                        closeAction={this.toggleEnclosureMenu}
+                        setValue={this.setEnclosure}
+                        // placeholder="Select Enclosures"
+                        labelStyle={styles.labelName}
+                        textFieldStyle={styles.textfield}
+                        style={[styles.fieldBox]}
+                      />
+                      {/* </View> */}
+                    </>
+                  ) : null
+                ) : null}
+
+                {this.state.selectionTypeId == "animal" ? (
+                  // <View style={styles.inputContainer}>
+                  <InputDropdown
+                    label={"Animals"}
+                    value={this.state.ref_name}
+                    isOpen={this.state.isrefMenuOpen}
+                    items={this.state.animals}
+                    openAction={this.togglerefMenu}
+                    closeAction={this.togglerefMenu}
+                    setValue={this.setref}
+                    // placeholder="Select Animals"
+                    labelStyle={styles.labelName}
+                    textFieldStyle={styles.textfield}
+                    style={[
+                      styles.fieldBox,
+                      this.state.hasRefValidationError
+                        ? styles.errorFieldBox
+                        : null,
+                    ]}
+                  />
+                ) : // </View>
+                  null}
               </>
             )}
             {/* <View style={[styles.inputContainer, styles.pb0, styles.mb0]}>
@@ -1819,12 +1820,13 @@ export default class AddObservation extends React.Component {
       </Modal> */}
 
       {/*Scan Modal*/}
+      <ScannerButton btnPress={this.openRelatedScaner} />
       <Modal2
         animationType="fade"
         transparent={true}
         statusBarTranslucent={true}
         visible={this.state.isScanModal}
-        onRequestClose={this.closeScanModal}
+        // onRequestClose={this.closeScanModal}
       >
         <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
           <View style={styles.scanModalOverlay}>
@@ -1852,7 +1854,7 @@ export default class AddObservation extends React.Component {
           </View>
         </SafeAreaView>
       </Modal2>
-    </SafeAreaView>
+    </Container>
   );
 }
 

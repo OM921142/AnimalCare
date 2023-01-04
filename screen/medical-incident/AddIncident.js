@@ -60,15 +60,13 @@ export default class AddIncident extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
-      toggleScanModal: false,
-      toggleScanStatus: false,
       isIncidentTypeMenuOpen: false,
       incidentTypes: [],
       incidentTypeId: props.route.params.item?.incident_type ?? undefined,
       sections: [],
       enclosures: [],
       refreshing: false,
-      hasRefValidationError : false,
+      hasRefValidationError: false,
       animals: [],
       users: [],
       departments: [],
@@ -149,24 +147,24 @@ export default class AddIncident extends React.Component {
       selectionTypeName: props.route.params?.item?.ref
         ? capitalize(props.route.params.item.ref)
         : props.route.params.selectionType
-        ? capitalize(props.route.params.selectionType)
-        : "",
+          ? capitalize(props.route.params.selectionType)
+          : "",
       isSelectionTypeMenuOpen: false,
       selectionTypeId: props.route.params?.item?.ref
         ? props.route.params.item.ref
         : props.route.params.selectionType
-        ? props.route.params.selectionType
-        : undefined,
+          ? props.route.params.selectionType
+          : undefined,
       ref_id: props.route.params?.item?.ref_id
         ? props.route.params.item.ref_id
         : props.route.params.ref_id
-        ? props.route.params.ref_id
-        : undefined,
+          ? props.route.params.ref_id
+          : undefined,
       ref_name: props.route.params?.item?.ref_value
         ? props.route.params.item.ref_value
         : props.route.params.ref_name
-        ? props.route.params.ref_name
-        : undefined,
+          ? props.route.params.ref_name
+          : undefined,
       isrefMenuOpen: false,
 
       isNotifyMenuOpen: false,
@@ -189,13 +187,13 @@ export default class AddIncident extends React.Component {
       section_id: props.route.params?.grand_parent_id
         ? props.route.params?.grand_parent_id
         : props.route.params?.parent_id
-        ? props.route.params?.parent_id
-        : "",
+          ? props.route.params?.parent_id
+          : "",
       section_name: props.route.params?.grand_parent_name
         ? props.route.params?.grand_parent_name
         : props.route.params?.parent_name
-        ? props.route.params?.parent_name
-        : "",
+          ? props.route.params?.parent_name
+          : "",
       enclosure_id: props.route.params?.grand_parent_id
         ? props.route.params?.parent_id
         : "",
@@ -400,7 +398,7 @@ export default class AddIncident extends React.Component {
       ref_name: undefined,
       isSelectionTypeMenuOpen: false,
       hasTypeValidationError: false,
-      hasRefValidationError : false
+      hasRefValidationError: false
     });
   };
 
@@ -445,7 +443,7 @@ export default class AddIncident extends React.Component {
       hasIncidentTypesValidationError: false,
       hasDescriptionValidationError: false,
       hasTypeValidationError: false,
-      hasRefValidationError : false
+      hasRefValidationError: false
     });
     if (typeof selectionTypeId === "undefined") {
       this.setState({
@@ -457,7 +455,7 @@ export default class AddIncident extends React.Component {
       });
       // this.scrollToScrollViewTop();
       return false;
-    }else if (selectionTypeId != "others" && typeof ref_id === "undefined") {
+    } else if (selectionTypeId != "others" && typeof ref_id === "undefined") {
       this.setState({
         hasRefValidationError: true,
         notifyUserModalVisible: false,
@@ -467,7 +465,7 @@ export default class AddIncident extends React.Component {
       });
       // this.scrollToScrollViewTop();
       return false;
-    }else if (typeof incidentTypeId === "undefined") {
+    } else if (typeof incidentTypeId === "undefined") {
       this.setState({
         hasIncidentTypesValidationError: true,
         notifyUserModalVisible: false,
@@ -541,7 +539,7 @@ export default class AddIncident extends React.Component {
       this.setState(
         {
           hasTypeValidationError: false,
-          hasRefValidationError : false,
+          hasRefValidationError: false,
           hasClassNameValidationError: false,
           hasCategotyNameValidationError: false,
           hasPriorityValidationError: false,
@@ -709,7 +707,7 @@ export default class AddIncident extends React.Component {
       hasIncidentTypesValidationError: false,
       hasDescriptionValidationError: false,
       hasTypeValidationError: false,
-      hasRefValidationError : false
+      hasRefValidationError: false
     });
     if (typeof selectionTypeId === "undefined") {
       this.setState({
@@ -721,7 +719,7 @@ export default class AddIncident extends React.Component {
       });
       // this.scrollToScrollViewTop();
       return false;
-    }else if (selectionTypeId != "others" && typeof ref_id === "undefined") {
+    } else if (selectionTypeId != "others" && typeof ref_id === "undefined") {
       this.setState({
         hasRefValidationError: true,
         notifyUserModalVisible: false,
@@ -731,7 +729,7 @@ export default class AddIncident extends React.Component {
       });
       // this.scrollToScrollViewTop();
       return false;
-    }else if (typeof incidentTypeId === "undefined") {
+    } else if (typeof incidentTypeId === "undefined") {
       this.setState({
         hasIncidentTypesValidationError: true,
         notifyUserModalVisible: false,
@@ -800,10 +798,6 @@ export default class AddIncident extends React.Component {
       .catch((error) => console.log(error));
   };
 
-  closeScanModal = () => {
-    this.setState({ isScanModal: !this.state.isScanModal });
-  };
-
   handleBarCodeScanned = (data) => {
     try {
       let scanData = JSON.parse(data.data);
@@ -839,14 +833,14 @@ export default class AddIncident extends React.Component {
           ref_id: scanData.enclosure_db_id
             ? scanData.enclosure_db_id
             : scanData.animal_code
-            ? scanData.animal_code
-            : scanData.section_id,
+              ? scanData.animal_code
+              : scanData.section_id,
 
           ref_name: scanData.animal_code
             ? scanData?.common_name
             : scanData.enclosure_id
-            ? scanData.enclosure_id
-            : scanData.section,
+              ? scanData.enclosure_id
+              : scanData.section,
 
           section_id: scanData.section_id,
 
@@ -875,36 +869,21 @@ export default class AddIncident extends React.Component {
       incidentUploadData: arr2,
     });
   };
-
-  openScaner = () => {
-   Camera.requestCameraPermissionsAsync()
-     .then((result) => {
-       if (result.status === "granted") {
-         this.setState({ toggleScanModal: true, toggleScanStatus: true });
-       } else {
-         Alert.alert("Please give the permission");
-       }
-     })
-     .catch((error) => console.log(error));
- };
- closeScanModal = () => {
-  this.setState({
-    toggleScanModal: false,
-    toggleScanStatus: false,
-    // scanData: "",
-    // toggleShowOptionsAfterScan: false,
-  });
-};
+  closeScanModal = () => {
+    this.setState({
+      isScanModal: false,
+    });
+  };
   render = () => (
-    <SafeAreaView>
-       <SafeAreaView>
+
+    <Container>
       <OverlayLoader visible={this.state.showLoader} />
       <Header
         title={
           parseInt(this.state.id) > 0 ? "Edit Incident" : "Report Incident"
         }
         // showRelatedScanButton={true}
-        openRelatedScaner={this.openRelatedScaner}
+        // openRelatedScaner={this.openRelatedScaner}
       />
       <View style={styles.body}>
         <KeyboardAwareScrollView
@@ -976,7 +955,7 @@ export default class AddIncident extends React.Component {
                   ]}
                 />
               ) : // </View>
-              null}
+                null}
 
               {this.state.selectionTypeId == "enclosure" ? (
                 <>
@@ -1076,7 +1055,7 @@ export default class AddIncident extends React.Component {
                   ]}
                 />
               ) : // </View>
-              null}
+                null}
             </>
 
             <InputDropdown
@@ -1096,8 +1075,8 @@ export default class AddIncident extends React.Component {
                   ? styles.errorFieldBox
                   : null,
               ]}
-              // extraIcon={<Ionicons name="add-circle" color={Colors.primary} size={22} />}
-              // extraFunc={this.addIncidentTypes}
+            // extraIcon={<Ionicons name="add-circle" color={Colors.primary} size={22} />}
+            // extraFunc={this.addIncidentTypes}
             />
             {/* </View> */}
             {/* <View style={[styles.fieldBox]}>
@@ -1138,7 +1117,7 @@ export default class AddIncident extends React.Component {
                 autoCompleteType="off"
                 autoCapitalize="words"
                 maxLength={120}
-                // placeholder="Enter Incident Description"
+              // placeholder="Enter Incident Description"
               />
             </View>
 
@@ -1746,7 +1725,7 @@ export default class AddIncident extends React.Component {
           </View>
         </View>
       </Modal>
-     
+
       {/* save and create Task popup */}
       <Modal
         isVisible={this.state.saveAndCreateTaskModalVisible}
@@ -1777,7 +1756,7 @@ export default class AddIncident extends React.Component {
               ]}
             />
           </View>
-          
+
 
           <View style={{ padding: 10 }}>
             <InputDropdown
@@ -1823,23 +1802,22 @@ export default class AddIncident extends React.Component {
                 <Text style={styles.textWhite}>Cancel</Text>
               </Pressable>
             </View>
-            
+
           </View>
         </View>
       </Modal>
-      
+
       {/*Scan Modal*/}
-      <View>
-        <ScannerButton btnPress={this.openScaner}/>
-        </View>
+    
+        <ScannerButton btnPress={this.openRelatedScaner} />
 
       <Modal2
         animationType="fade"
         transparent={true}
         statusBarTranslucent={true}
-        // visible={this.state.isScanModal}
+         visible={this.state.isScanModal}
         onRequestClose={this.closeScanModal}
-        visible={this.state.toggleScanModal}
+        // visible={this.state.toggleScanModal}
       >
         <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
           <View style={styles.scanModalOverlay}>
@@ -1858,7 +1836,7 @@ export default class AddIncident extends React.Component {
                    style={StyleSheet.absoluteFill}
                  /> */}
             </View>
-            
+
             <TouchableOpacity
               style={styles.cancelButton}
               onPress={this.closeScanModal}
@@ -1868,12 +1846,9 @@ export default class AddIncident extends React.Component {
           </View>
         </SafeAreaView>
       </Modal2>
-      
-    </SafeAreaView>
-    <View>
-        <ScannerButton btnPress={this.openScaner}/>
-        </View>
-    </SafeAreaView>
+
+    </Container>
+
   );
 }
 
