@@ -7,9 +7,14 @@ import {
 	FlatList,
 	Image,
 	Dimensions,
-	ActivityIndicator
+	ActivityIndicator,
+	Modal,
+	SafeAreaView,
+	TouchableOpacity,
 } from "react-native";
 import { Container } from "native-base";
+import globalStyles from "../config/Styles";
+import { BarCodeScanner } from "expo-barcode-scanner";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors, Configs } from "../config";
 import { Header, ListEmpty, Loader, AnimalSearchModal } from "../component";
@@ -21,12 +26,17 @@ import Carousel from "react-native-snap-carousel";
 import { height } from 'react-native-daterange-picker/src/modules';
 import { SliderBox } from 'react-native-image-slider-box';
 import CachedImage from 'expo-cached-image'
+import ScannerButton from "../component/ScannerButton";
+import { Camera } from "expo-camera";
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const SLIDE_WIDTH = Math.round((SLIDER_WIDTH * 95) / 100);
 const itemHorizontalMargin = (2 * SLIDER_WIDTH) / 100;
 const ITEM_WIDTH = SLIDE_WIDTH + itemHorizontalMargin * 2;
 const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 2) / 3);
+const windowScreenWidth = Dimensions.get("screen").width;
+const windowScreenHeight = Dimensions.get("screen").height;
+const windowWidth = Dimensions.get("window").width;
 
 export default class SubCategory extends React.Component {
 	static contextType = AppContext;
@@ -37,6 +47,8 @@ export default class SubCategory extends React.Component {
 		this.state = {
 			isLoading: true,
 			subCategories: [],
+			toggleScanModal: false,
+			toggleScanStatus: false,
 			classID:
 				typeof this.props.route.params !== "undefined"
 					? this.props.route.params.classID
@@ -107,8 +119,8 @@ export default class SubCategory extends React.Component {
 					{
 						isLoading: false,
 						subCategories: [...matchArr, ...remainArr],
-						coverImages: response[2].map((item)=>{
-							if(item.cover_image){
+						coverImages: response[2].map((item) => {
+							if (item.cover_image) {
 								return item;
 							}
 						})
@@ -124,6 +136,26 @@ export default class SubCategory extends React.Component {
 			})
 			.catch((error) => console.log(error));
 	};
+
+	openScaner = () => {
+		Camera.requestCameraPermissionsAsync()
+			.then((result) => {
+				if (result.status === "granted") {
+					this.setState({ toggleScanModal: true, toggleScanStatus: true });
+				} else {
+					Alert.alert("Please give the permission");
+				}
+			})
+			.catch((error) => console.log(error));
+	};
+
+	closeScanModal = () => {
+		this.setState({
+			toggleScanModal: false,
+			toggleScanStatus: false,
+		});
+	};
+
 
 	handelRefresh = () => {
 		this.setState(
@@ -186,9 +218,11 @@ export default class SubCategory extends React.Component {
 					<Text style={styles.name}>{`${capitalize(item.cat_name)}`}
 					</Text>
 					<Text>
-						 {item.scientificName ? <Text style={ { fontSize: 12, fontStyle: "italic",
-						color: Colors.textColor, }}>{`( ${capitalize(item.scientificName)} )`}</Text> : null}
-						 </Text>
+						{item.scientificName ? <Text style={{
+							fontSize: 12, fontStyle: "italic",
+							color: Colors.textColor,
+						}}>{`( ${capitalize(item.scientificName)} )`}</Text> : null}
+					</Text>
 					{/* <Text style={[styles.name,{fontSize: 12}]}>{`M - ${item.total_male_animal}, F - ${item.total_female_animal}`}</Text> */}
 				</View>
 				{this.context.userDetails.action_types.includes(Configs.USER_ACTION_TYPES_CHECKING.stats) ? (
@@ -244,24 +278,24 @@ export default class SubCategory extends React.Component {
 		return (
 			<View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
 				<View key={item.id.toString()} style={styles.slide}>
-				<CachedImage
-							source={{
-								uri: item.cover_image,
-							}}
-							cacheKey={`${item.id}-thumb`}
-							placeholderContent={(
-								// <Image  source={require('../assets/icon.png')} style={{height:150 , width: 200}}/>
-								<ActivityIndicator
-									color={Colors.primary}
-									size="small"
-									style={{
-										flex: 1,
-										justifyContent: "center",
-									}}
-								/>
-							)}
-							style={styles.sliderImage}
-						/>
+					<CachedImage
+						source={{
+							uri: item.cover_image,
+						}}
+						cacheKey={`${item.id}-thumb`}
+						placeholderContent={(
+							// <Image  source={require('../assets/icon.png')} style={{height:150 , width: 200}}/>
+							<ActivityIndicator
+								color={Colors.primary}
+								size="small"
+								style={{
+									flex: 1,
+									justifyContent: "center",
+								}}
+							/>
+						)}
+						style={styles.sliderImage}
+					/>
 				</View>
 				<View
 					style={{
@@ -287,38 +321,39 @@ export default class SubCategory extends React.Component {
 
 
 	render = () => {
-		const carouselItems = this.state.coverImages.map((x)=>{
-			
+		const carouselItems = this.state.coverImages.map((x) => {
+
 			return (
 				// x.cover_image
-			  {
-				id: x.id,
-				common_name: x.cat_name,
-				cover_image:x.cover_image,
-			  }
-			)
-			
-		  })
-		  console.log("carouselItems>>>>>>>>>>",carouselItems);
-		return(
-		<Container>
-			<Header
-				title={
-					typeof this.state.categoryName !== "undefined"
-						? this.state.categoryName
-						: "Sub Categories"
+
+				{
+					id: x.id,
+					common_name: x.cat_name,
+					cover_image: x.cover_image,
 				}
-				showScanButton={this.state.isLoading ? undefined : true}
-				searchAction={this.state.isLoading ? undefined : this.openSearchModal}
-				addAction={this.checkAddActionPermissions()}
-			/>
-			{this.state.isLoading ? (
-				<Loader />
-			) : (
-				<>
-					{this.state.coverImages.length > 0 ? (
-						<View style={styles.carouselConatainer}>
-							{/* <Carousel
+			)
+
+		})
+		//   console.log("carouselItems>>>>>>>>>>",carouselItems);
+		return (
+			<Container>
+				<Header
+					title={
+						typeof this.state.categoryName !== "undefined"
+							? this.state.categoryName
+							: "Sub Categories"
+					}
+					// showScanButton={this.state.isLoading ? undefined : true}
+					searchAction={this.state.isLoading ? undefined : this.openSearchModal}
+					addAction={this.checkAddActionPermissions()}
+				/>
+				{this.state.isLoading ? (
+					<Loader />
+				) : (
+					<>
+						{this.state.coverImages.length > 0 ? (
+							<View style={styles.carouselConatainer}>
+								{/* <Carousel
 								layout={'default'}
 								inactiveSlideOpacity={0.6}
 								inactiveSlideScale={0.65}
@@ -336,66 +371,116 @@ export default class SubCategory extends React.Component {
 								autoplay
 							/> */}
 
-							<SliderBox
-								images={carouselItems}
-								firstItem={0}
-								sliderBoxHeight={ITEM_HEIGHT}
-								parentWidth={SLIDER_WIDTH}
-								ImageComponentStyle={{borderRadius: 2, width: '99.25%', marginTop: 2}}
-								paginationBoxVerticalPadding={20}
-								autoplay
-								circleLoop
-								resizeMethod={'resize'}
-								resizeMode={'cover'}
-								paginationBoxStyle={{
-									position: "absolute",
-									bottom: 0,
-									padding: 0,
-									alignItems: "center",
-									alignSelf: "center",
-									justifyContent: "center",
-									paddingVertical: 10
-								}}
-								dotStyle={{
-									width: 0,
-									height: 0,
-									borderRadius: 3,
-									marginHorizontal: 0,
-									padding: 0,
-									margin: 0,
-									backgroundColor: "rgba(128, 128, 128, 0.92)"
-								}}
-								imageLoadingColor={Colors.primary}
+								<SliderBox
+									images={carouselItems}
+									firstItem={0}
+									sliderBoxHeight={ITEM_HEIGHT}
+									parentWidth={SLIDER_WIDTH}
+									ImageComponentStyle={{ borderRadius: 2, width: '99.25%', marginTop: 2 }}
+									paginationBoxVerticalPadding={20}
+									autoplay
+									circleLoop
+									resizeMethod={'resize'}
+									resizeMode={'cover'}
+									paginationBoxStyle={{
+										position: "absolute",
+										bottom: 0,
+										padding: 0,
+										alignItems: "center",
+										alignSelf: "center",
+										justifyContent: "center",
+										paddingVertical: 10
+									}}
+									dotStyle={{
+										width: 0,
+										height: 0,
+										borderRadius: 3,
+										marginHorizontal: 0,
+										padding: 0,
+										margin: 0,
+										backgroundColor: "rgba(128, 128, 128, 0.92)"
+									}}
+									imageLoadingColor={Colors.primary}
 								/>
+							</View>
+						) : null}
+
+						<FlatList
+							showsVerticalScrollIndicator={false}
+							showsHorizontalScrollIndicator={false}
+							ListEmptyComponent={() => <ListEmpty />}
+							data={this.state.subCategories}
+							keyExtractor={(item, index) => item.id.toString()}
+							renderItem={this.renderSubCategoryItem}
+							initialNumToRender={this.state.subCategories.length}
+							refreshing={this.state.isLoading}
+							onRefresh={this.handelRefresh}
+							contentContainerStyle={
+								this.state.subCategories.length === 0 ? styles.container : null
+							}
+						/>
+					</>
+
+				)}
+				<ScannerButton btnPress={this.openScaner} />
+				<Modal
+					animationType="fade"
+					transparent={true}
+					statusBarTranslucent={true}
+					visible={this.state.toggleScanModal}
+					onRequestClose={this.closeScanModal}
+				>
+					<SafeAreaView style={globalStyles.safeAreaViewStyle}>
+						<View
+							style={
+								this.state.toggleScanStatus
+									? styles.scanModalOverlay
+									: [
+										styles.scanModalOverlay,
+										{ backgroundColor: Colors.white },
+									]
+							}
+						>
+							{this.state.toggleScanStatus ? (
+								<>
+									<View style={styles.qrCodeSacnBox}>
+										<Camera
+											onBarCodeScanned={this.handleBarCodeScanned}
+											barCodeScannerSettings={{
+												barCodeTypes: [
+													BarCodeScanner.Constants.BarCodeType.qr,
+												],
+											}}
+											style={StyleSheet.absoluteFill}
+										/>
+									</View>
+									<TouchableOpacity
+										style={styles.cancelButton}
+										onPress={this.closeScanModal}
+									>
+										<Ionicons
+											name="close-outline"
+											style={styles.cancelButtonText}
+											size={55}
+										/>
+									</TouchableOpacity>
+								</>
+							) : (
+								// showOptionsAfterScan && func()
+								<></>
+							)}
 						</View>
-					) : null}
-
-					<FlatList
-					  showsVerticalScrollIndicator ={false}
-					  showsHorizontalScrollIndicator={false}
-						ListEmptyComponent={() => <ListEmpty />}
-						data={this.state.subCategories}
-						keyExtractor={(item, index) => item.id.toString()}
-						renderItem={this.renderSubCategoryItem}
-						initialNumToRender={this.state.subCategories.length}
-						refreshing={this.state.isLoading}
-						onRefresh={this.handelRefresh}
-						contentContainerStyle={
-							this.state.subCategories.length === 0 ? styles.container : null
-						}
-					/>
-				</>
-
-			)}
-
-			<AnimalSearchModal
-				ref={this.searchModalRef}
-				animalClass={this.state.classID}
-				animalCategory={this.state.categoryID}
-				navigation={this.props.navigation}
-			/>
-		</Container>
-	);}
+					</SafeAreaView>
+				</Modal>
+				<AnimalSearchModal
+					ref={this.searchModalRef}
+					animalClass={this.state.classID}
+					animalCategory={this.state.categoryID}
+					navigation={this.props.navigation}
+				/>
+			</Container>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
@@ -451,6 +536,24 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderBottomColor: '#eee',
 		elevation: 1,
-		height:ITEM_HEIGHT,
-	}
+		height: ITEM_HEIGHT,
+	},
+	scanModalOverlay: {
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.8)",
+		width: windowScreenWidth,
+		height: windowScreenHeight,
+	  },
+	  qrCodeSacnBox: {
+		width: Math.floor((windowWidth * 70) / 100),
+		height: Math.floor((windowWidth * 70) / 100),
+	  },
+	  scanResultBox: {
+		flex: 1,
+		 backgroundColor: Colors.white,
+		width: "100%",
+		alignItems: "center",
+		marginTop: 60,
+	  },
 });

@@ -9,6 +9,9 @@ import {
   Platform,
   Dimensions,
   ActivityIndicator,
+  Modal,
+	SafeAreaView,
+	TouchableOpacity,
 } from "react-native";
 import { Container } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,12 +24,19 @@ import { capitalize } from "../utils/Util";
 import Carousel from "react-native-snap-carousel";
 import { SliderBox } from "react-native-image-slider-box";
 import CachedImage from "expo-cached-image";
+import globalStyles from "../config/Styles";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import ScannerButton from "../component/ScannerButton";
+import { Camera } from "expo-camera";
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const SLIDE_WIDTH = Math.round((SLIDER_WIDTH * 95) / 100);
 const itemHorizontalMargin = (2 * SLIDER_WIDTH) / 100;
 const ITEM_WIDTH = SLIDE_WIDTH + itemHorizontalMargin * 2;
 const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 2) / 2.8);
+const windowScreenWidth = Dimensions.get("screen").width;
+const windowScreenHeight = Dimensions.get("screen").height;
+const windowWidth = Dimensions.get("window").width;
 
 export default class CommonNames extends React.Component {
   static contextType = AppContext;
@@ -38,6 +48,8 @@ export default class CommonNames extends React.Component {
       isLoading: true,
       commonNames: [],
       filteredData: [],
+      toggleScanModal: false,
+			toggleScanStatus: false,
       classID:
         typeof this.props.route.params !== "undefined"
           ? this.props.route.params.classID
@@ -193,6 +205,25 @@ export default class CommonNames extends React.Component {
     });
   };
 
+  openScaner = () => {
+		Camera.requestCameraPermissionsAsync()
+			.then((result) => {
+				if (result.status === "granted") {
+					this.setState({ toggleScanModal: true, toggleScanStatus: true });
+				} else {
+					Alert.alert("Please give the permission");
+				}
+			})
+			.catch((error) => console.log(error));
+	};
+
+	closeScanModal = () => {
+		this.setState({
+			toggleScanModal: false,
+			toggleScanStatus: false,
+		});
+	};
+
   renderListItem = ({ item }) => (
     <TouchableHighlight
       underlayColor={"#eee"}
@@ -334,7 +365,7 @@ export default class CommonNames extends React.Component {
       <Container>
         <Header
           title={this.state.screenName}
-          showScanButton={this.state.isLoading ? undefined : true}
+          // showScanButton={this.state.isLoading ? undefined : true}
           searchAction={this.state.isLoading ? undefined : this.openSearchModal}
           addAction={this.checkAddActionPermissions()}
         />
@@ -413,6 +444,57 @@ export default class CommonNames extends React.Component {
             />
           </>
         )}
+        {/* scanner button */}
+        <ScannerButton btnPress={this.openScaner} />
+				<Modal
+					animationType="fade"
+					transparent={true}
+					statusBarTranslucent={true}
+					visible={this.state.toggleScanModal}
+					onRequestClose={this.closeScanModal}
+				>
+					<SafeAreaView style={globalStyles.safeAreaViewStyle}>
+						<View
+							style={
+								this.state.toggleScanStatus
+									? styles.scanModalOverlay
+									: [
+										styles.scanModalOverlay,
+										{ backgroundColor: Colors.white },
+									]
+							}
+						>
+							{this.state.toggleScanStatus ? (
+								<>
+									<View style={styles.qrCodeSacnBox}>
+										<Camera
+											onBarCodeScanned={this.handleBarCodeScanned}
+											barCodeScannerSettings={{
+												barCodeTypes: [
+													BarCodeScanner.Constants.BarCodeType.qr,
+												],
+											}}
+											style={StyleSheet.absoluteFill}
+										/>
+									</View>
+									<TouchableOpacity
+										style={styles.cancelButton}
+										onPress={this.closeScanModal}
+									>
+										<Ionicons
+											name="close-outline"
+											style={styles.cancelButtonText}
+											size={55}
+										/>
+									</TouchableOpacity>
+								</>
+							) : (
+								// showOptionsAfterScan && func()
+								<></>
+							)}
+						</View>
+					</SafeAreaView>
+				</Modal>
 
         <AnimalSearchModal
           ref={this.searchModalRef}
@@ -493,4 +575,22 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 8,
   },
+  scanModalOverlay: {
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.8)",
+		width: windowScreenWidth,
+		height: windowScreenHeight,
+	  },
+	  qrCodeSacnBox: {
+		width: Math.floor((windowWidth * 70) / 100),
+		height: Math.floor((windowWidth * 70) / 100),
+	  },
+	  scanResultBox: {
+		flex: 1,
+		 backgroundColor: Colors.white,
+		width: "100%",
+		alignItems: "center",
+		marginTop: 60,
+	  },
 });

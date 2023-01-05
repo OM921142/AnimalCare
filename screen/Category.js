@@ -8,6 +8,9 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  SafeAreaView,
+  TouchableOpacity,
+  Modal,
 } from "react-native";
 import { Container } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,13 +28,21 @@ import { height } from "react-native-daterange-picker/src/modules";
 import { SliderBox } from "react-native-image-slider-box";
 import CachedImage from "expo-cached-image";
 
-const SLIDER_WIDTH = Dimensions.get("window").width;
-const SLIDE_WIDTH = Math.round((SLIDER_WIDTH * 95) / 100);
-const itemHorizontalMargin = (2 * SLIDER_WIDTH) / 100;
-const ITEM_WIDTH = SLIDE_WIDTH + itemHorizontalMargin * 2;
-const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 2) / 3);
 import globalStyles from "../config/Styles";
+import ScannerButton from "../component/ScannerButton";
+import { Camera } from "expo-camera";
+import { BarCodeScanner } from "expo-barcode-scanner";
 // import styles from './Styles'
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
+const windowScreenWidth = Dimensions.get("screen").width;
+const windowScreenHeight = Dimensions.get("screen").height;
+const SLIDER_WIDTH = Dimensions.get("window").width;
+const SLIDE_WIDTH = Math.round((SLIDER_WIDTH * 98) / 100);
+const itemHorizontalMargin = (2 * SLIDER_WIDTH) / 100;
+const ITEM_WIDTH = SLIDE_WIDTH + itemHorizontalMargin; //remove *2 for padding carousal
+const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 2) / 3);
+
 
 export default class Category extends React.Component {
   static contextType = AppContext;
@@ -42,6 +53,8 @@ export default class Category extends React.Component {
     this.state = {
       categories: [],
       isLoading: true,
+      toggleScanModal: false,
+      toggleScanStatus: false,
       classID:
         typeof this.props.route.params !== "undefined"
           ? this.props.route.params.classID
@@ -189,6 +202,25 @@ export default class Category extends React.Component {
     }
   };
 
+  openScaner = () => {
+    Camera.requestCameraPermissionsAsync()
+      .then((result) => {
+        if (result.status === "granted") {
+          this.setState({ toggleScanModal: true, toggleScanStatus: true });
+        } else {
+          Alert.alert("Please give the permission");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  closeScanModal = () => {
+    this.setState({
+      toggleScanModal: false,
+      toggleScanStatus: false,
+    });
+  };
+
   toggleShowTags = () => this.setState({ showTags: !this.state.showTags });
 
   renderCategoryItem = ({ item }) => {
@@ -255,8 +287,8 @@ export default class Category extends React.Component {
                       marginVertical: 5,
                       borderRadius: 2,
                       backgroundColor: Colors.white,
-                      borderColor : Colors.primary,
-                      borderWidth : 1,
+                      borderColor: Colors.primary,
+                      borderWidth: 1,
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -378,6 +410,7 @@ export default class Category extends React.Component {
     // 	)
     // 	}
     //   })
+    
 
     return (
       <Container>
@@ -387,7 +420,8 @@ export default class Category extends React.Component {
               ? this.state.className
               : "Categories"
           }
-          showScanButton={this.state.isLoading ? undefined : true}
+          //  showScanButton={this.state.isLoading ? undefined : true}
+
           searchAction={this.state.isLoading ? undefined : this.openSearchModal}
           addAction={this.checkAddActionPermissions()}
           tagShowAction={this.toggleShowTags}
@@ -466,13 +500,65 @@ export default class Category extends React.Component {
             />
           </>
         )}
-
+        {/* Scannr button */}
+        <ScannerButton btnPress={this.openScaner} />
+        <Modal
+              animationType="fade"
+              transparent={true}
+              statusBarTranslucent={true}
+              visible={this.state.toggleScanModal}
+              onRequestClose={this.closeScanModal}
+            >
+              <SafeAreaView style={globalStyles.safeAreaViewStyle}>
+                <View
+                  style={
+                    this.state.toggleScanStatus
+                      ? styles.scanModalOverlay
+                      : [
+                          styles.scanModalOverlay,
+                          { backgroundColor: Colors.white },
+                        ]
+                  }
+                >
+                  {this.state.toggleScanStatus ? (
+                    <>
+                      <View style={styles.qrCodeSacnBox}>
+                        <Camera
+                          onBarCodeScanned={this.handleBarCodeScanned}
+                          barCodeScannerSettings={{
+                            barCodeTypes: [
+                              BarCodeScanner.Constants.BarCodeType.qr,
+                            ],
+                          }}
+                          style={StyleSheet.absoluteFill}
+                        />
+                      </View>
+                      <TouchableOpacity
+                        style={styles.cancelButton}
+                        onPress={this.closeScanModal}
+                      >
+                        <Ionicons
+                          name="close-outline"
+                          style={styles.cancelButtonText}
+                          size={55}
+                        />
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    // showOptionsAfterScan && func()
+                    <></>
+                  )}
+                </View>
+              </SafeAreaView>
+            </Modal>
         <AnimalSearchModal
           ref={this.searchModalRef}
           animalClass={this.state.classID}
           navigation={this.props.navigation}
         />
+        
       </Container>
+      
     );
   };
 }
@@ -531,5 +617,34 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
     elevation: 1,
     height: ITEM_HEIGHT,
+  },
+  scannerBtn: {
+    position: "absolute",
+    bottom: 25,
+    right: 25,
+    backgroundColor: Colors.primary,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  scanModalOverlay: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    width: windowScreenWidth,
+    height: windowScreenHeight,
+  },
+  qrCodeSacnBox: {
+    width: Math.floor((windowWidth * 70) / 100),
+    height: Math.floor((windowWidth * 70) / 100),
+  },
+  scanResultBox: {
+    flex: 1,
+    // backgroundColor: Colors.white,
+    width: "100%",
+    alignItems: "center",
+    marginTop: 60,
   },
 });
