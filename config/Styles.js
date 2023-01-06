@@ -1232,5 +1232,36 @@ const styles = StyleSheet.create({
     // paddingVertical: 5,
     fontSize: Colors.lableSize,
   },
+  mainContainer: {
+    width: "auto",
+    marginVertical: 2,
+    borderColor: "black",
+    alignItems: "baseline",
+},
+inputContainer: {
+    width: "100%",
+},
+labels: {
+    paddingHorizontal: 2,
+    position: "absolute",
+    top: 10,
+    left: 10,
+    fontSize:Colors.lableSize,
+},
+inputstyle: {
+    position: "relative",
+    top: -5,
+    left: 0,
+    padding: 8,
+    paddingLeft: 80,
+    fontSize: 19,
+    width: "100%",
+    borderWidth: 0.8,
+    borderColor: "#ddd",
+},
+date_box: {
+    position: "relative",
+    left: 300,
+}
 });
 export default styles;

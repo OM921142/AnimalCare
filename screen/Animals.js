@@ -22,6 +22,7 @@ import AppContext from "../context/AppContext";
 import Profile_Pedigree from "./AnimalDetails/Profile_Pedigree";
 import globalStyles from "../config/Styles";
 import styles from './Styles'
+import BirthDetails from "./AnimalDetails/BirthDetails";
 
 
 export default class AnimalsData extends React.Component {
@@ -75,6 +76,18 @@ export default class AnimalsData extends React.Component {
 					<Profile_Pedigree {...this.props} />
 					{/* <ProfileNew {...this.props} /> */}
 				</Tab>
+
+				<Tab
+					heading="Birth Details"
+					tabStyle={styles.inActiveTab}
+					textStyle={styles.inActiveText}
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+				>
+					<BirthDetails {...this.props} />
+					
+				</Tab>
+
 				{/* <Tab
 					heading="Profile"
 					tabStyle={styles.inActiveTab}

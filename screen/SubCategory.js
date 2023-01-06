@@ -49,6 +49,7 @@ export default class SubCategory extends React.Component {
 			subCategories: [],
 			toggleScanModal: false,
 			toggleScanStatus: false,
+			
 			classID:
 				typeof this.props.route.params !== "undefined"
 					? this.props.route.params.classID
@@ -156,6 +157,65 @@ export default class SubCategory extends React.Component {
 		});
 	};
 
+	handleBarCodeScanned = (data) => {
+		try {
+		  let scanData = JSON.parse(data.data);
+		  let type = scanData.type ? scanData.type : scanData.qr_code_type;
+		  if (type == "Group") {
+			this.setState({
+				toggleScanModal: !this.state.toggleScanModal,
+	
+			  selectionTypeName: "Animal",
+	
+			  selectionTypeId: "animal",
+	
+			  ref_id: scanData.animal_code,
+	
+			  ref_name: scanData?.common_name,
+	
+			  section_id: scanData.section_id,
+	
+			  section_name: scanData.section_name,
+	
+			  enclosure_id: scanData.enclosure_id,
+	
+			  enclosure_name: scanData.enclosure_name,
+			});
+		  } else {
+			this.setState({
+				toggleScanModal: !this.state.toggleScanModal,
+	
+			  selectionTypeName: capitalize(type),
+	
+			  selectionTypeId: type,
+	
+			  ref_id: scanData.enclosure_db_id
+				? scanData.enclosure_db_id
+				: scanData.animal_code
+				  ? scanData.animal_code
+				  : scanData.section_id,
+	
+			  ref_name: scanData.animal_code
+				? scanData?.common_name
+				: scanData.enclosure_id
+				  ? scanData.enclosure_id
+				  : scanData.section,
+	
+			  section_id: scanData.section_id,
+	
+			  section_name: scanData.section,
+	
+			  enclosure_id: scanData.enclosure_db_id,
+	
+			  enclosure_name: scanData.enclosure_id,
+			});
+		  }
+		} catch (error) {
+		  console.log(error);
+		  this.setState({ toggleScanModal: !this.state.toggleScanModal });
+		  alert("Wrong QR code scan !!");
+		}
+	  };
 
 	handelRefresh = () => {
 		this.setState(
@@ -424,54 +484,54 @@ export default class SubCategory extends React.Component {
 				)}
 				<ScannerButton btnPress={this.openScaner} />
 				<Modal
-					animationType="fade"
-					transparent={true}
-					statusBarTranslucent={true}
-					visible={this.state.toggleScanModal}
-					onRequestClose={this.closeScanModal}
-				>
-					<SafeAreaView style={globalStyles.safeAreaViewStyle}>
-						<View
-							style={
-								this.state.toggleScanStatus
-									? styles.scanModalOverlay
-									: [
-										styles.scanModalOverlay,
-										{ backgroundColor: Colors.white },
-									]
-							}
-						>
-							{this.state.toggleScanStatus ? (
-								<>
-									<View style={styles.qrCodeSacnBox}>
-										<Camera
-											onBarCodeScanned={this.handleBarCodeScanned}
-											barCodeScannerSettings={{
-												barCodeTypes: [
-													BarCodeScanner.Constants.BarCodeType.qr,
-												],
-											}}
-											style={StyleSheet.absoluteFill}
-										/>
-									</View>
-									<TouchableOpacity
-										style={styles.cancelButton}
-										onPress={this.closeScanModal}
-									>
-										<Ionicons
-											name="close-outline"
-											style={styles.cancelButtonText}
-											size={55}
-										/>
-									</TouchableOpacity>
-								</>
-							) : (
-								// showOptionsAfterScan && func()
-								<></>
-							)}
-						</View>
-					</SafeAreaView>
-				</Modal>
+              animationType="fade"
+              transparent={true}
+              statusBarTranslucent={true}
+              visible={this.state.toggleScanModal}
+              onRequestClose={this.closeScanModal}
+            >
+              <SafeAreaView style={globalStyles.safeAreaViewStyle}>
+                <View
+                  style={
+                    this.state.toggleScanStatus
+                      ? style.scanModalOverlay
+                      : [
+                          style.scanModalOverlay,
+                          { backgroundColor: Colors.white },
+                        ]
+                  }
+                >
+                  {this.state.toggleScanStatus ? (
+                    <>
+                      <View style={style.qrCodeSacnBox}>
+                        <Camera
+                          onBarCodeScanned={this.handleBarCodeScanned}
+                          barCodeScannerSettings={{
+                            barCodeTypes: [
+                              BarCodeScanner.Constants.BarCodeType.qr,
+                            ],
+                          }}
+                          style={StyleSheet.absoluteFill}
+                        />
+                      </View>
+                      <TouchableOpacity
+                        style={style.cancelButton}
+                        onPress={this.closeScanModal}
+                      >
+                        <Ionicons
+                          name="close-outline"
+                          style={style.cancelButtonText}
+                          size={55}
+                        />
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    // showOptionsAfterScan && func()
+                    <></>
+                  )}
+                </View>
+              </SafeAreaView>
+            </Modal>
 				<AnimalSearchModal
 					ref={this.searchModalRef}
 					animalClass={this.state.classID}
@@ -557,3 +617,66 @@ const styles = StyleSheet.create({
 		marginTop: 60,
 	  },
 });
+const style = StyleSheet.create({
+	scannerBtn: {
+	  position: "absolute",
+	  bottom: 25,
+	  right: 25,
+	  backgroundColor: Colors.primary,
+	  width: 50,
+	  height: 50,
+	  borderRadius: 50,
+	  alignItems: "center",
+	  justifyContent: "center",
+	},
+	scanModalOverlay: {
+	  justifyContent: "center",
+	  alignItems: "center",
+	  backgroundColor: "rgba(0, 0, 0, 0.8)",
+	  width: windowScreenWidth,
+	  height: windowScreenHeight,
+	},
+	qrCodeSacnBox: {
+	  width: Math.floor((windowWidth * 70) / 100),
+	  height: Math.floor((windowWidth * 70) / 100),
+	},
+	scanResultBox: {
+	  flex: 1,
+	  backgroundColor: Colors.white,
+	  width: "100%",
+	  alignItems: "center",
+	  marginTop: 60,
+	},
+	modalView: {
+	  width: "98%",
+	  borderColor: "#ddd",
+	  borderWidth: 1,
+	  borderBottomWidth: 0,
+	  borderRadius: Colors.formBorderRedius,
+	  marginBottom: 30,
+	},
+	cancelButton: {
+	  position: "absolute",
+	  zIndex: 11,
+	  top: 30,
+	  left: 10,
+	  backgroundColor: Colors.lightGrey,
+	  width: 30,
+	  height: 30,
+	  borderRadius: 100,
+	  alignItems: "center",
+	  justifyContent: "center",
+	  elevation: 3,
+	},
+	cancelButtonText: {
+	  color: "#000",
+	  fontSize: 24,
+	},
+	textfield: {
+	  height: "auto",
+	  fontSize: Colors.textSize,
+	  color: Colors.textColor,
+	  textAlign: "left",
+	  padding: 5,
+	},
+  });

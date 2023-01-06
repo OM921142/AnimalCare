@@ -476,7 +476,7 @@ export default class Profile_Pedigree extends React.Component {
           this.setState({ imageLoader: false, showLoader: false });
         } else {
           this.setState({ imageLoader: false, showLoader: false });
-          alert("Please reupload the last image");
+          alert("Please reupload the last ishowmage");
         }
       })
       .catch((err) => {

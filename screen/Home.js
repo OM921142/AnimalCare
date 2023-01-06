@@ -300,7 +300,7 @@ export default class Home extends React.Component {
 
   handleBarCodeScanned = ({ data }) => {
     let parsedData = JSON.parse(data);
-    console.log(parsedData);
+    console.log(parsedData,"parseData");
     if (parsedData.query == "details") {
       this.setState({
         toggleScanModal: false,
@@ -338,6 +338,21 @@ export default class Home extends React.Component {
       });
     }
   };
+  goToBack = () => this.props.navigation.goBack();
+  componentDidUpdate() {
+    if (this.state.toggleShowOptionsAfterScan === true) {
+      this.setState({ toggleScanModal: false });
+      this.props.navigation.navigate("OptionsAfterScan", {
+        scanData: this.state.scanData,
+        // // toggleScanModal,
+        type: this.state.type,
+        closeScanModal: this.closeScanModal,
+        setShowOptionsAfterScan: (value) =>
+          this.setState({ toggleShowOptionsAfterScan: value }),
+        gotoBack: this.goToBack,
+      });
+    }
+  }
 
   _renderItem = ({ item, index }, parallaxProps) => {
     return (
