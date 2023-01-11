@@ -43,7 +43,7 @@ import moment from "moment";
 import { Modal as NativeModal } from "react-native-modal";
 import colors from "../../config/colors";
 import { DateTimePickerModal } from 'react-native-modal-datetime-picker';
-import styles from "../../config/Styles";
+import styles from "../../config/Styles"; 
 
 export default class Profile_Pedigree extends React.Component {
   static contextType = AppContext;

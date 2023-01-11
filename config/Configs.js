@@ -52,6 +52,11 @@ const Configs = {
     { id: "Undetermined", name: "Undetermined", value: "Undetermined" },
     { id: "Indeterminate", name: "Indeterminate", value: "Indeterminate" },
   ],
+  BIRTH_TYPE: [
+    { id: "Captive", name: "Captive ", value: "Captive " },
+    { id: "Wild ", name: "Wild ", value: "Wild " },
+    { id: "Others", name: "Others", value: "Others" },
+  ],
   ANIMAL_STATUS: [
     { id: "Alive", name: "Alive", value: "Alive" },
     { id: "Dead", name: "Dead", value: "Dead" },

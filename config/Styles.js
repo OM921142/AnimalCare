@@ -1250,7 +1250,7 @@ labels: {
 },
 inputstyle: {
     position: "relative",
-    top: -5,
+    top: -2,
     left: 0,
     padding: 8,
     paddingLeft: 80,
