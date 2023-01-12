@@ -18,6 +18,7 @@ import AppContext from "../../context/AppContext";
 import Configs from "../../config/Configs";
 import InputDropdown from "../../component/InputDropdown";
 import { getCommonNameEnclosures, getCommonNameSections, } from "../../services/APIServices";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 const BirthDetails = (props) => {
@@ -25,6 +26,7 @@ const BirthDetails = (props) => {
     const [date, setDate] = useState(new Date())
     const [Age, setAge] = useState('')
     const [birthDetailType, setBirthDetailType] = useState("");
+    const [initialRearing, setInitialRearing] = useState("");
     const [isbirthDetailTypeMenuOpen, setIsbirthDetailTypeMenuOpen] = useState(false);
     const [father, setFather] = useState([])
     const [mother, setMother] = useState('')
@@ -38,10 +40,12 @@ const BirthDetails = (props) => {
     const [parentAnimals, setParentAnimals] = useState([])
     const [searchValue, setSearchValue] = useState('')
     const [isAnimalEnclosureMenuOpen, setIsAnimalEnclosureMenuOpen] = useState(false)
+    const [isinitialRearingMenuOpen, setIsinitialRearingMenuOpen] = useState(false)
     const [isAnimalSectionMenuOpen, setIsAnimalSectionMenuOpen] = useState(false)
     const [englishName] = useState(props.route.params.commonName)
     const [animalSection, setAnimalSection] = useState([])
     const [showTable, setShowTable] = useState(false)
+    const [showTableMother, setShowTableMother] = useState(false)
 
     let context = useContext(AppContext);
     const ShowDatePicker = () => {
@@ -67,7 +71,13 @@ const BirthDetails = (props) => {
 
     const HandleSetBirthDetailsType = (v) => {
         setBirthDetailType(v.value);
+    
         setIsbirthDetailTypeMenuOpen(false);
+    }
+    const HandleInitialRearning = (v) => {
+        
+        setInitialRearing(v.value)
+        setIsinitialRearingMenuOpen(false);
     }
     const toggleBirthDetailsTypeMenu = () => {
         setIsbirthDetailTypeMenuOpen(!isbirthDetailTypeMenuOpen)
@@ -77,6 +87,9 @@ const BirthDetails = (props) => {
     }
     const toggleAnimalEnclosureMenu = () => {
         setIsAnimalEnclosureMenuOpen(!isAnimalEnclosureMenuOpen)
+    }
+    const toggeInitialRearingMenu = () => {
+        setIsinitialRearingMenuOpen(!isinitialRearingMenuOpen)
     }
 
 
@@ -105,12 +118,19 @@ const BirthDetails = (props) => {
     };
 
     const handleSubmit = () => {
-        let value = { enclosure_name: enclosureIDName, section_name: animalSectionName };
+        let value = { enclosure_name: enclosureIDName, section_name: animalSectionName, search_value: searchValue };
         let arr = father;
         arr.push(value);
         setFather(arr)
         closeSearchModal()
         setShowTable(true)
+    }
+    const handelMotherSection = () => {
+
+        let value2 = { enclosure_name: enclosureIDName, section_name: animalSectionName, search_value: searchValue };
+        setMother(value2)
+        closeSearchModal()
+        setShowTableMother(true)
     }
 
     useEffect(() => {
@@ -147,253 +167,288 @@ const BirthDetails = (props) => {
 
     return (
         <>
-            <View style={styles.mainContainer}>
+            <KeyboardAwareScrollView extraHeight={120}>
 
-                <View style={[styles.fieldBox]}>
-                    <Text style={styles.labelName}>Date of Birth: </Text>
-                    <TouchableOpacity activeOpacity={1} style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }} onPress={() => { ShowDatePicker("dob") }}>
-                        <Text style={styles.dateField}>{date.toDateString()}</Text>
-                        <AntDesign name="calendar" color={Colors.primary} size={20} />
-                    </TouchableOpacity>
-                </View>
+                <View style={styles.mainContainer}>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}> Age :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'>{Age}</TextInput>
-                </View>
+                    <View style={[styles.fieldBox]}>
+                        <Text style={styles.labelName}>Date of Birth: </Text>
+                        <TouchableOpacity activeOpacity={1} style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }} onPress={() => { ShowDatePicker("dob") }}>
+                            <Text style={styles.dateField}>{date.toDateString()}</Text>
+                            <AntDesign name="calendar" color={Colors.primary} size={20} />
+                        </TouchableOpacity>
+                    </View>
 
-                <InputDropdown
-                    label={"Birth Type:"}
-                    isMandatory={true}
-                    value={birthDetailType}
-                    isOpen={isbirthDetailTypeMenuOpen}
-                    items={Configs.BIRTH_TYPE}
-                    openAction={toggleBirthDetailsTypeMenu}
-                    closeAction={toggleBirthDetailsTypeMenu}
-                    setValue={HandleSetBirthDetailsType}
-                    labelStyle={styles.labelName}
-                    textFieldStyle={[styles.textfield, birthDetailType ? styles.width50 : null,]}
-                    style={[
-                        styles.fieldBox,
-                        // this.state.isSourceValidationFailed
-                        //     ? styles.errorFieldBox
-                        //     : null,
-                    ]}
-                />
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Birth Place :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={150} autoCapitalize='none'></TextInput>
-                </View>
-                <TouchableOpacity
-                    activeOpacity={1}
-                    style={styles.fieldBox}
-                    onPress={() => OpenSearchModal("father")}>
-                    <Text style={styles.labelName}>Father:</Text>
-                    <TextInput
-                        editable={false}
-                        // value={father}
-                        onChangeText={(father) => setFather({ father })}
-                        style={[styles.textfield, { width: '50%' }]}
-                        autoCompleteType="off"
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}> Age :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'>{Age}</TextInput>
+                    </View>
+
+                    <InputDropdown
+                        label={"Birth Type:"}
+                        isMandatory={true}
+                        value={birthDetailType}
+                        isOpen={isbirthDetailTypeMenuOpen}
+                        items={Configs.BIRTH_TYPE}
+                        openAction={toggleBirthDetailsTypeMenu}
+                        closeAction={toggleBirthDetailsTypeMenu}
+                        setValue={HandleSetBirthDetailsType}
+                        labelStyle={styles.labelName}
+                        textFieldStyle={[styles.textfield, birthDetailType ? styles.width50 : null,]}
+                        style={[
+                            styles.fieldBox,
+                            // this.state.isSourceValidationFailed
+                            //     ? styles.errorFieldBox
+                            //     : null,
+                        ]}
                     />
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}>Birth Place :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={150} autoCapitalize='none'></TextInput>
+                    </View>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        style={styles.fieldBox}
+                        onPress={() => OpenSearchModal("father")}>
+                        <Text style={styles.labelName}>Father :</Text>
+                        <TextInput
+                            editable={false}
+                            // value={father}
+                            onChangeText={(father) => setFather({ father })}
+                            style={[styles.textfield, { width: '50%' }]}
+                            autoCompleteType="off"
+                        />
+                        <Ionicons name="add" size={26} color="black" style={style.ionicons} />
+                    </TouchableOpacity>
 
                     {showTable == true ? (
                         <DataTable style={style.Table_container}>
                             <DataTable.Header style={styles.tableHeader}>
                                 <DataTable.Title>Animal Section name</DataTable.Title>
                                 <DataTable.Title>Enclosure Name</DataTable.Title>
-                                <DataTable.Title>Age</DataTable.Title>
+                                <DataTable.Title>Animal Code</DataTable.Title>
                             </DataTable.Header>
                             {father?.map((data, index) => {
-                                console.log('map dats', data)
                                 return (
                                     <DataTable.Row key={index}>
-                                        <DataTable.Cell>{data.enclosure_name}</DataTable.Cell>
                                         <DataTable.Cell>{data.section_name}</DataTable.Cell>
-                                        <DataTable.Cell></DataTable.Cell>
+                                        <DataTable.Cell>{data.enclosure_name}</DataTable.Cell>
+                                        <DataTable.Cell>{data.search_value}</DataTable.Cell>
                                     </DataTable.Row>
                                 );
                             })}
                         </DataTable>
                     ) : null}
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                    activeOpacity={1}
-                    style={styles.fieldBox}
-                    onPress={() => OpenSearchModal("mother")}
-                >
-                    <Text style={styles.labelName}>Mother:</Text>
-                    <TextInput
-                        editable={false}
-                        value={mother}
-                        onChangeText={(mother) => setMother({ mother })}
-                        style={[styles.textfield, { width: '50%' }]}
-                        autoCompleteType="off"
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        style={styles.fieldBox}
+                        onPress={() => OpenSearchModal("mother")}
+                    >
+                        <Text style={styles.labelName}>Mother:</Text>
+                        <TextInput
+                            editable={false}
+                            // value={mother}
+                            onChangeText={(mother) => setMother({ mother })}
+                            style={[styles.textfield, { width: '50%' }]}
+                            autoCompleteType="off"
+                        />
+
+
+                    </TouchableOpacity>
+                    {showTableMother == true ? (
+                        <DataTable style={style.Table_container}>
+                            <DataTable.Header style={styles.tableHeader}>
+                                <DataTable.Title>Animal Section name</DataTable.Title>
+                                <DataTable.Title>Enclosure Name</DataTable.Title>
+                                <DataTable.Title>Animal Code</DataTable.Title>
+                            </DataTable.Header>
+
+                            <DataTable.Row>
+                                <DataTable.Cell>{mother.section_name}</DataTable.Cell>
+                                <DataTable.Cell>{mother.enclosure_name}</DataTable.Cell>
+                                <DataTable.Cell>{mother.search_value}</DataTable.Cell>
+                            </DataTable.Row>
+                        </DataTable>
+                    ) : null}
+
+
+                    <InputDropdown
+                        label={"Initial Rearing:"}
+                        isMandatory={true}
+                        value={initialRearing}
+                        isOpen={isinitialRearingMenuOpen}
+                        items={Configs.INITIAL_REARING}
+                        openAction={toggeInitialRearingMenu}
+                        closeAction={toggeInitialRearingMenu}
+                        setValue={HandleInitialRearning}
+                        labelStyle={styles.labelName}
+                        textFieldStyle={[styles.textfield, initialRearing ? styles.width50 : null,]}
+                        style={[
+                            styles.fieldBox,
+                            // this.state.isSourceValidationFailed
+                            //     ? styles.errorFieldBox
+                            //     : null,
+                        ]}
                     />
-                </TouchableOpacity>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}>Birth waight :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    </View>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Initial Rearing :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}>Marks :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}>Color :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}>Status :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}>Status change date  :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.labels}>Comment on Status :</Text>
+                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    </View>
+
                 </View>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Birth waight :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
-                </View>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Marks :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
-                </View>
+                <DateTimePickerModal
+                    mode={'date'}
+                    display={Platform.OS == 'ios' ? 'inline' : 'default'}
+                    isVisible={show}
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
+                />
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Color :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Status :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Status change date  :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Text style={styles.labels}>Comment on Status :</Text>
-                    <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
-                </View>
-
-            </View>
+                {/*Search Modal for Father and Mother*/}
 
 
-            <DateTimePickerModal
-                mode={'date'}
-                display={Platform.OS == 'ios' ? 'inline' : 'default'}
-                isVisible={show}
-                onConfirm={handleConfirm}
-                onCancel={hideDatePicker}
-            />
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={isAnimalSearchModalOpen}
+                >
+                    <View style={styles.searchModalOverlay}>
+                        <View style={styles.seacrhModalContainer}>
+                            <View style={styles.searchModalHeader}>
 
-            {/*Search Modal for Father and Mother*/}
-
-
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isAnimalSearchModalOpen}
-            >
-                <View style={styles.searchModalOverlay}>
-                    <View style={styles.seacrhModalContainer}>
-                        <View style={styles.searchModalHeader}>
-
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                style={styles.headerBackBtnContainer}
-                                onPress={closeSearchModal}
-                            >
-                                <Ionicons name="arrow-back" size={25} color={Colors.white} />
-                            </TouchableOpacity>
-                            <View style={styles.headerTitleContainer}>
-                                <Text
-                                    style={{
-                                        fontSize: Colors.headerSize,
-                                        color: Colors.white,
-                                    }}
+                                <TouchableOpacity
+                                    activeOpacity={1}
+                                    style={styles.headerBackBtnContainer}
+                                    onPress={closeSearchModal}
                                 >
-                                    {searchFor === "father"
-                                        ? "Select Father"
-                                        : "Select Mother"}
-                                </Text>
+                                    <Ionicons name="arrow-back" size={25} color={Colors.white} />
+                                </TouchableOpacity>
+                                <View style={styles.headerTitleContainer}>
+                                    <Text
+                                        style={{
+                                            fontSize: Colors.headerSize,
+                                            color: Colors.white,
+                                        }}
+                                    >
+                                        {searchFor === "father"
+                                            ? "Select Father"
+                                            : "Select Mother"}
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                        <View style={styles.searchModalBody}>
-                            <View
-                                style={styles.formBorder}
-                            >
-                                <InputDropdown
-                                    label={"Select Section:"}
-                                    value={animalSectionName}
-                                    isOpen={isAnimalSectionMenuOpen}
-                                    items={animalSection}
-                                    openAction={toggleAnimalSectionMenu}
-                                    closeAction={toggleAnimalSectionMenu}
-                                    setValue={handleAnimalSection}
-                                    labelStyle={styles.labelName}
-                                    textFieldStyle={[styles.textfield, animalSectionName ? [styles.width50, { paddingLeft: 0 }] : null,]}
-                                    style={[styles.fieldBox]}
-                                />
-
-
-                                <InputDropdown
-                                    label={"Enclosure ID:"}
-                                    value={enclosureIDName}
-                                    isOpen={isAnimalEnclosureMenuOpen}
-                                    items={parentEnclosureID}
-                                    openAction={toggleAnimalEnclosureMenu}
-                                    closeAction={toggleAnimalEnclosureMenu}
-                                    setValue={handelParentEnclosure}
-                                    labelStyle={styles.labelName}
-                                    textFieldStyle={[styles.textfield, enclosureIDName ? [styles.width50, { paddingLeft: 0 }] : null,]}
-                                    style={[styles.fieldBox, { borderBottomWidth: 0 }]}
-                                />
-
-                                {typeof enclosureIDName !== "undefined" ? (
-                                    <View style={[styles.fieldBox, {
-                                        borderRadius: 3,
-                                        borderColor: "#ddd",
-                                        borderTopWidth: 1, borderBottomWidth: 0
-                                    }]}>
-                                        <TextInput
-                                            autoCompleteType="off"
-                                            autoCapitalize="none"
-                                            placeholder={"Type Animal Code"}
-                                            value={searchValue}
-                                            style={[
-                                                styles.textfield,]}
-                                            onChangeText={(searchValue) =>
-                                                setSearchValue(searchValue)
-                                            }
-                                        />
-                                    </View>
-                                ) : null}
-
-                                {isFetchingParent ? null : (
-                                    <FlatList
-                                        contentContainerStyle={{ flex: 1 }}
-                                        data={getParentAnimalsData()}
-                                        keyExtractor={(item, index) => item.id.toString()}
-                                        renderItem={() => renderSearchItem}
-                                        initialNumToRender={parentAnimals.length}
-                                        ListEmptyComponent={() => (
-                                            <Text style={styles.searchingText}>No Result Found</Text>
-                                        )}
+                            <View style={styles.searchModalBody}>
+                                <View
+                                    style={styles.formBorder}
+                                >
+                                    <InputDropdown
+                                        label={"Select Section:"}
+                                        value={animalSectionName}
+                                        isOpen={isAnimalSectionMenuOpen}
+                                        items={animalSection}
+                                        openAction={toggleAnimalSectionMenu}
+                                        closeAction={toggleAnimalSectionMenu}
+                                        setValue={handleAnimalSection}
+                                        labelStyle={styles.labelName}
+                                        textFieldStyle={[styles.textfield, animalSectionName ? [styles.width50, { paddingLeft: 0 }] : null,]}
+                                        style={[styles.fieldBox]}
                                     />
-                                )}
 
+
+                                    <InputDropdown
+                                        label={"Enclosure ID:"}
+                                        value={enclosureIDName}
+                                        isOpen={isAnimalEnclosureMenuOpen}
+                                        items={parentEnclosureID}
+                                        openAction={toggleAnimalEnclosureMenu}
+                                        closeAction={toggleAnimalEnclosureMenu}
+                                        setValue={handelParentEnclosure}
+                                        labelStyle={styles.labelName}
+                                        textFieldStyle={[styles.textfield, enclosureIDName ? [styles.width50, { paddingLeft: 0 }] : null,]}
+                                        style={[styles.fieldBox, { borderBottomWidth: 0 }]}
+                                    />
+
+                                    {typeof enclosureIDName !== "undefined" ? (
+                                        <View style={[styles.fieldBox, {
+                                            borderRadius: 3,
+                                            borderColor: "#ddd",
+                                            borderTopWidth: 1, borderBottomWidth: 0
+                                        }]}>
+                                            <TextInput
+                                                autoCompleteType="off"
+                                                autoCapitalize="none"
+                                                placeholder={"Type Animal Code"}
+                                                value={searchValue}
+                                                style={[
+                                                    styles.textfield,]}
+                                                onChangeText={(searchValue) =>
+                                                    setSearchValue(searchValue)
+                                                }
+                                            />
+                                        </View>
+                                    ) : null}
+
+
+
+                                </View>
                             </View>
-                        </View>
+                            {searchFor === "father" ?
+                                <View style={styles.buttonsContainer}>
+                                    <TouchableOpacity activeOpacity={1} onPress={handleSubmit}>
+                                        <Text style={[styles.buttonText, styles.saveBtnText]}>
+                                            SAVE
+                                        </Text>
+                                    </TouchableOpacity>
 
-                        <View style={styles.buttonsContainer}>
-                            <TouchableOpacity activeOpacity={1} onPress={handleSubmit}>
-                                <Text style={[styles.buttonText, styles.saveBtnText]}>
-                                    SAVE
-                                </Text>
-                            </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={1} onPress={closeSearchModal}>
+                                        <Text style={[styles.buttonText, styles.exitBtnText]}>
+                                            EXIT
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View> : <View style={styles.buttonsContainer}>
+                                    <TouchableOpacity activeOpacity={1} onPress={handelMotherSection}>
+                                        <Text style={[styles.buttonText, styles.saveBtnText]}>
+                                            SAVE
+                                        </Text>
+                                    </TouchableOpacity>
 
-                            <TouchableOpacity activeOpacity={1}>
-                                <Text style={[styles.buttonText, styles.exitBtnText]}>
-                                    EXIT
-                                </Text>
-                            </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={1} onPress={closeSearchModal}>
+                                        <Text style={[styles.buttonText, styles.exitBtnText]}>
+                                            EXIT
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>}
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            </KeyboardAwareScrollView>
         </>
     )
 };
@@ -402,15 +457,22 @@ export default BirthDetails;
 
 const style = StyleSheet.create({
     Table_container: {
-        padding: 0,
+        // borderTopWidth:0.2,
+        // borderBottomWidth:0.2,
+        height: "auto",
+        width: "100%",
         position: "relative",
-        left: -150,
-
+        left: 5,
+        bottom: 1,
     },
     tableHeader: {
         backgroundColor: '#DCDCDC',
-
     },
+    ionicons: {
+        position: "relative",
+        top: 2,
+        right: 50,
+    }
 });
 
 

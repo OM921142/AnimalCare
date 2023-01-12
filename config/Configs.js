@@ -57,6 +57,15 @@ const Configs = {
     { id: "Wild ", name: "Wild ", value: "Wild " },
     { id: "Others", name: "Others", value: "Others" },
   ],
+  INITIAL_REARING: [
+    { id: "Parent", name: "Parent", value: "Parent" },
+    { id: "Colony", name: "Colony", value: "Colony" },
+    { id: "Group", name: "Group", value: "Group" },
+    { id: "Foster", name: "Foster", value: "Foster" },
+    { id: "Hand", name: "Hand", value: "Hand" },
+    { id: "Peer", name: "Peer", value: "Peer" },
+    { id: "Unknown", name: "Unknown", value: "Unknown" },
+  ],
   ANIMAL_STATUS: [
     { id: "Alive", name: "Alive", value: "Alive" },
     { id: "Dead", name: "Dead", value: "Dead" },

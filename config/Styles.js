@@ -1234,7 +1234,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: "auto",
-    marginVertical: 2,
+    marginVertical: 1,
     borderColor: "black",
     alignItems: "baseline",
 },
@@ -1242,26 +1242,31 @@ inputContainer: {
     width: "100%",
 },
 labels: {
-    paddingHorizontal: 2,
     position: "absolute",
-    top: 10,
+    top: 9,
     left: 10,
-    fontSize:Colors.lableSize,
+    fontSize: Colors.lableSize,
 },
 inputstyle: {
     position: "relative",
-    top: -2,
+    top: -1,
     left: 0,
-    padding: 8,
-    paddingLeft: 80,
-    fontSize: 19,
-    width: "100%",
+    padding: 7,
+    paddingLeft: 130,
+    fontWeight: "light",
+    width: "auto",
     borderWidth: 0.8,
     borderColor: "#ddd",
 },
-date_box: {
+ionicons: {
     position: "relative",
-    left: 300,
-}
+    top: 2,
+    right: 180,
+},
+
+
+
+
+
 });
 export default styles;
