@@ -23,6 +23,9 @@ import Profile_Pedigree from "./AnimalDetails/Profile_Pedigree";
 import globalStyles from "../config/Styles";
 import styles from './Styles'
 import BirthDetails from "./AnimalDetails/BirthDetails";
+import Mortality from "./AnimalDetails/Mortality";
+import IdentificationDetail from "./AnimalDetails/IndentificationDetails";
+import SourceDetail from "./AnimalDetails/SourceDetail";
 
 
 export default class AnimalsData extends React.Component {
@@ -88,6 +91,36 @@ export default class AnimalsData extends React.Component {
 					
 				</Tab>
 
+				<Tab
+					heading="Mortality"
+					tabStyle={styles.inActiveTab}
+					textStyle={styles.inActiveText}
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+				>
+					<Mortality {...this.props} />
+					
+				</Tab>
+
+				<Tab
+					heading="Identification Details"
+					tabStyle={styles.inActiveTab}
+					textStyle={styles.inActiveText}
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+				>
+					<IdentificationDetail {...this.props} />
+				</Tab>
+
+				<Tab
+					heading="Source Detail"
+					tabStyle={styles.inActiveTab}
+					textStyle={styles.inActiveText}
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+				>
+					<SourceDetail {...this.props} />
+				</Tab>
 				{/* <Tab
 					heading="Profile"
 					tabStyle={styles.inActiveTab}

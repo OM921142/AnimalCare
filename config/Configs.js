@@ -66,6 +66,66 @@ const Configs = {
     { id: "Peer", name: "Peer", value: "Peer" },
     { id: "Unknown", name: "Unknown", value: "Unknown" },
   ],
+  DEATH_TYPE: [
+    { id: "Congenital Defect", name: "Congenital Defect", value: "Congenital Defect" },
+    { id: "Euthanasia", name: "Euthanasia", value: "Euthanasia" },
+    { id: "Murder", name: "Murder", value: "Murder" },
+    { id: "Natural", name: "Natural", value: "Natural" },
+    { id: "Old Age", name: "Old Age", value: "Old Age" },
+    { id: "Poisoned", name: "Poisoned", value: "Poisoned" },
+    { id: "Stray Attack", name: "Stray Attack", value: "Stray Attack" },
+    {id: "Suspicious", name: "Suspicious", value: "Suspicious" },
+    {id: "Foul Play", name: "Foul Play", value: "Foul Play" },
+  ],
+  CARCASS_CONDITION: [
+    { id: "Fresh", name: "Fresh", value: "Fresh" },
+    { id: "Moderatel Autolyzed", name: "Moderatel Autolyzed", value: "Moderatel Autolyzed" },
+    { id: "Not Available", name: "Not Available", value: "Not Available" },
+    { id: "Not Usable", name: "Not Usable", value: "Not Usable" },
+    { id: "Severly Autolyzed", name: "Severly Autolyzed", value: "Severly Autolyzed" },
+    { id: "Slighty Autolyzed", name: "Slighty Autolyzed", value: "Slighty Autolyzed" },
+  ],
+  NECROPSY_REQUEST: [
+    { id: "Yes", name: "Yes",value:"Yes" },
+    { id: "No", name: "No",value:"No" },
+  ],
+  //===> IdentificationDetails  inuptfiled data==>
+  
+SEX: [
+  { id: "Male", name: "Male", value: "Male" },
+  { id: "Female", name: "Female", value: "Female" },
+  { id: "Undetermined", name: "Undetermined", value: "Undetermined" },
+  { id: "Indeterminate", name: "Indeterminate", value: "Indeterminate" },
+  { id: "Asexual", name: "Asexual", value: "Asexual" },
+  { id: "Hermaphrodite", name: "Hermaphrodite", value: "Hermaphrodite" },
+],
+
+ENTITY_TYPE_TAB_MENU: [
+  { id: "Individual", name: "Individual", value:"Individual" },
+  { id: "Group", name: "Group", value: "Group" },
+],
+COLLECTION_TYPE_TAB_MENU:[
+  { id: "Exhibition", name: "Exhibition", value:"Exhibition" },
+  { id: "Examination", name: "Examination", value:"Examination" },
+  { id: "Rehab", name: "Rehab", value:"Rehab" },
+  { id: "Rescue", name: "Rescue", value:"Rescue" },
+  { id: "Wild Observation", name: "Wild Observation", value:"Wild Observation" },
+],
+HYBRID_TYPE_TAB_MENU:[
+  { id: "Not a Hybrid", name: "Not a Hybrid", value:"Not a Hybrid" },
+  { id: "Species Hybrid", name: "Species Hybrid", value:"Species Hybrid" },
+  { id: "Sub Species Hybrid", name: "Sub Species Hybrid", value:"Sub Species Hybrid" },
+  { id: "Unknown", name: "Unknown", value:"Unknown" },
+],
+ Select_Section:[ 
+  { id: "Ring Number", name :"Ring Number", value:"Ring Number" },
+  { id: "DNA", name: "DNA", value:"DNA" },
+  { id: "Microchip", name: "Microchip", value:"Microchip" },
+],
+DATA:[
+  { id: "Purchase", name: "Purchase", value:"Purchase" },
+  { id: "Wild", name: "Wild", value:"Wild" },
+],
   ANIMAL_STATUS: [
     { id: "Alive", name: "Alive", value: "Alive" },
     { id: "Dead", name: "Dead", value: "Dead" },
@@ -81,6 +141,7 @@ const Configs = {
   ],
   ANIMAL_TYPE_GROUP: "Group",
   ANIMAL_TYPE_INDIVIDUAL: "Individual",
+
   ANIMAL_SOURCES: [
     { id: "1", name: "Transfer", value: "Transfer" },
     { id: "2", name: "Gifted", value: "Gifted" },

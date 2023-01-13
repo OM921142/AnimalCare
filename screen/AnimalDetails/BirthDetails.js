@@ -23,7 +23,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const BirthDetails = (props) => {
     const [show, setShow] = useState(false);
+    const [statusShow, setStatusShow ]= useState(false);
     const [date, setDate] = useState(new Date())
+    const [statusDate, setStatusDate] = useState(new Date())
     const [Age, setAge] = useState('')
     const [birthDetailType, setBirthDetailType] = useState("");
     const [initialRearing, setInitialRearing] = useState("");
@@ -35,9 +37,6 @@ const BirthDetails = (props) => {
     const [animalSectionName, setAnimalSectionName] = useState([])
     const [parentEnclosureID, setParentEnclosureID] = useState([])
     const [enclosureIDName, setEnclosureIDName] = useState([])
-    const [animalEnclosures, setAnimalEnclosures] = useState([])
-    const [isFetchingParent, setIsFetchingParent] = useState(true)
-    const [parentAnimals, setParentAnimals] = useState([])
     const [searchValue, setSearchValue] = useState('')
     const [isAnimalEnclosureMenuOpen, setIsAnimalEnclosureMenuOpen] = useState(false)
     const [isinitialRearingMenuOpen, setIsinitialRearingMenuOpen] = useState(false)
@@ -46,11 +45,24 @@ const BirthDetails = (props) => {
     const [animalSection, setAnimalSection] = useState([])
     const [showTable, setShowTable] = useState(false)
     const [showTableMother, setShowTableMother] = useState(false)
+    const [animal_status, setAnimalStatus] = useState(false)
+    const [isAnimalStatusMenuOpen, setIsAnimalStatusMenuOpen] = useState(false)
 
     let context = useContext(AppContext);
     const ShowDatePicker = () => {
         setShow(true)
     }
+    const StatusChangeDtae = () => {
+        setStatusShow(true)
+    }
+    const handelAnimalStatus = (v) => {
+        setAnimalStatus(v.value)
+        setIsAnimalStatusMenuOpen(false)
+    };
+
+    toggleAnimalStatusMenu = () => {
+        setIsAnimalStatusMenuOpen(!isAnimalStatusMenuOpen,)
+    };
 
     const handleConfirm = (selectDate) => {
         setDate(selectDate)
@@ -63,19 +75,28 @@ const BirthDetails = (props) => {
         }
         hideDatePicker();
 
+
+    }
+
+    const handleConfirmDate = (selectStatusDate) => {
+        setStatusDate(selectStatusDate)
+        hideDatePicker();
+
+
     }
 
     const hideDatePicker = () => {
         setShow(false)
+        setStatusShow(false)
     }
 
     const HandleSetBirthDetailsType = (v) => {
         setBirthDetailType(v.value);
-    
+
         setIsbirthDetailTypeMenuOpen(false);
     }
     const HandleInitialRearning = (v) => {
-        
+
         setInitialRearing(v.value)
         setIsinitialRearingMenuOpen(false);
     }
@@ -97,22 +118,16 @@ const BirthDetails = (props) => {
         setIsAnimalSearchModalOpen(true)
         setSearchFor(searchFor)
         setAnimalSectionName(undefined)
-        setAnimalEnclosures([])
         setParentEnclosureID()
         setEnclosureIDName(undefined)
-        setIsFetchingParent(true)
-        setParentAnimals([])
         setSearchValue('')
     };
     const closeSearchModal = () => {
         setIsAnimalSearchModalOpen(false)
         setSearchFor('')
         setAnimalSectionName(undefined)
-        setAnimalEnclosures([])
         setParentEnclosureID(undefined)
         setEnclosureIDName(undefined)
-        setIsFetchingParent(true)
-        setParentAnimals([])
         setSearchValue('')
 
     };
@@ -181,7 +196,7 @@ const BirthDetails = (props) => {
 
                     <View style={styles.inputContainer}>
                         <Text style={styles.labels}> Age :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'>{Age}</TextInput>
+                        <TextInput style={styles.inputstyle} autoCapitalize='none'>{Age}</TextInput>
                     </View>
 
                     <InputDropdown
@@ -204,7 +219,7 @@ const BirthDetails = (props) => {
                     />
                     <View style={styles.inputContainer}>
                         <Text style={styles.labels}>Birth Place :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={150} autoCapitalize='none'></TextInput>
+                        <TextInput style={styles.inputstyle} autoCapitalize='none'></TextInput>
                     </View>
                     <TouchableOpacity
                         activeOpacity={1}
@@ -254,7 +269,6 @@ const BirthDetails = (props) => {
                             autoCompleteType="off"
                         />
 
-
                     </TouchableOpacity>
                     {showTableMother == true ? (
                         <DataTable style={style.Table_container}>
@@ -293,32 +307,44 @@ const BirthDetails = (props) => {
                     />
                     <View style={styles.inputContainer}>
                         <Text style={styles.labels}>Birth waight :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                        <TextInput style={styles.inputstyle} autoCapitalize='none'></TextInput>
                     </View>
 
                     <View style={styles.inputContainer}>
                         <Text style={styles.labels}>Marks :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                        <TextInput style={styles.inputstyle} autoCapitalize='none'></TextInput>
                     </View>
 
                     <View style={styles.inputContainer}>
                         <Text style={styles.labels}>Color :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                        <TextInput style={styles.inputstyle} autoCapitalize='none'></TextInput>
                     </View>
 
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.labels}>Status :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
-                    </View>
+                    <InputDropdown
+                        label={" Status:"}
+                        isMandatory={false}
+                        value={animal_status}
+                        isOpen={isAnimalStatusMenuOpen}
+                        items={Configs.ANIMAL_STATUS}
+                        openAction={toggleAnimalStatusMenu}
+                        closeAction={toggleAnimalStatusMenu}
+                        setValue={handelAnimalStatus}
+                        labelStyle={styles.labelName}
+                        textFieldStyle={[styles.textfield, animal_status ? [styles.width50, { paddingLeft: 0 }] : null,]}
+                        style={[styles.fieldBox, { borderBottomWidth: 1 }]}
+                    />
 
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.labels}>Status change date  :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                    <View style={[styles.fieldBox,]}>
+                        <Text style={styles.labelName}>Status change date: </Text>
+                        <TouchableOpacity activeOpacity={1} style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }} onPress={() => { StatusChangeDtae() }}>
+                            <Text style={styles.dateField}>{statusDate.toDateString()}</Text>
+                            <AntDesign name="calendar" color={Colors.primary} size={20} />
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.inputContainer}>
                         <Text style={styles.labels}>Comment on Status :</Text>
-                        <TextInput style={styles.inputstyle} paddingHorizontal={110} autoCapitalize='none'></TextInput>
+                        <TextInput style={styles.inputstyle} autoCapitalize='none'></TextInput>
                     </View>
 
                 </View>
@@ -332,6 +358,13 @@ const BirthDetails = (props) => {
                     onCancel={hideDatePicker}
                 />
 
+                <DateTimePickerModal
+                    mode={'date'}
+                    display={Platform.OS == 'ios' ? 'inline' : 'default'}
+                    isVisible={statusShow}
+                    onConfirm={handleConfirmDate}
+                    onCancel={hideDatePicker}
+                />
                 {/*Search Modal for Father and Mother*/}
 
 
@@ -415,8 +448,6 @@ const BirthDetails = (props) => {
                                         </View>
                                     ) : null}
 
-
-
                                 </View>
                             </View>
                             {searchFor === "father" ?
@@ -457,8 +488,6 @@ export default BirthDetails;
 
 const style = StyleSheet.create({
     Table_container: {
-        // borderTopWidth:0.2,
-        // borderBottomWidth:0.2,
         height: "auto",
         width: "100%",
         position: "relative",

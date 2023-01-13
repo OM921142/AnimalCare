@@ -1252,7 +1252,7 @@ inputstyle: {
     top: -1,
     left: 0,
     padding: 7,
-    paddingLeft: 130,
+    paddingLeft: 184,
     fontWeight: "light",
     width: "auto",
     borderWidth: 0.8,
