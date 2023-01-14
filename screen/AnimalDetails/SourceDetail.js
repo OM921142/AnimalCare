@@ -11,6 +11,7 @@ import { Configs } from '../../config';
 const SourceDetail = () => {
     const [sourceDetail, setSourceDetail] = useState("");
     const [isSourceDetailTypeMenuOpen, setIsSourceDetailTypeMenuOpen] = useState(false);
+     
     const HandleSetSourceDetailType = (v) => {
         setSourceDetail(v.name);
         setIsSourceDetailTypeMenuOpen(false);

@@ -89,6 +89,13 @@ const Configs = {
     { id: "Yes", name: "Yes",value:"Yes" },
     { id: "No", name: "No",value:"No" },
   ],
+  Measurements: [
+    { id: "Kg", name: "Kg",value:"Kg" },
+    { id: "MI", name: "MI",value:"MI" },
+    { id: "Nos", name: "Nos",value:"Nos" },
+    { id: "Etc", name: "Etc",value:"Etc" },
+  ],
+
   //===> IdentificationDetails  inuptfiled data==>
   
 SEX: [

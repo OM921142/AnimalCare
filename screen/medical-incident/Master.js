@@ -10,6 +10,7 @@ import { Container } from "native-base";
 import {
   Ionicons,
   FontAwesome,
+  FontAwesome5,
   MaterialCommunityIcons,
   AntDesign,
 } from "@expo/vector-icons";
@@ -143,6 +144,21 @@ export default class Master extends React.Component {
           icon: (
             <MaterialCommunityIcons
               name="food-fork-drink"
+              size={35}
+              color={Colors.textColor}
+            />
+          ),
+        },
+        {
+          id: 9,
+          name: "Animal",
+          onclick: () =>
+            this.props.navigation.navigate("AnimalMaster", {
+              title: "Measurements",
+            }),
+          icon: (
+            <FontAwesome5
+              name="wolf-pack-battalion"
               size={35}
               color={Colors.textColor}
             />

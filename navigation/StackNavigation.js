@@ -208,6 +208,9 @@ import AddUserPermission from "../screen/staff/AddUserPermission";
 //Chat
 import Chat from "../screen/Chat-section/Chat";
 import VersionCheck from "../screen/VersionControl/VersionCheck";
+import AnimalMaster from "../screen/AnimalDetails/AnimalMaster";
+import MeasurementsList from "../screen/AnimalDetails/MeasurementsList";
+import MeasurementsComponent from "../screen/AnimalDetails/MeasurementsComponent";
 
 const Stack = createStackNavigator();
 
@@ -466,6 +469,10 @@ const MainStackNavigation = () => {
       <Stack.Screen name="TagGroupList" component={TagGroupList} />
       <Stack.Screen name="TagAssign" component={TagAssign} />
 
+      {/* Animal */}
+      <Stack.Screen name="AnimalMaster" component={AnimalMaster} />
+      <Stack.Screen name="MeasurementsList" component={MeasurementsList} />
+      <Stack.Screen name="MeasurementsComponent" component={MeasurementsComponent} />
       {/* Kitchen screens */}
       <Stack.Screen name="KitchenMaster" component={KitchenMaster} />
       <Stack.Screen name="Foods" component={Foods} />

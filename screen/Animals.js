@@ -26,6 +26,9 @@ import BirthDetails from "./AnimalDetails/BirthDetails";
 import Mortality from "./AnimalDetails/Mortality";
 import IdentificationDetail from "./AnimalDetails/IndentificationDetails";
 import SourceDetail from "./AnimalDetails/SourceDetail";
+import MeasurementsComponent from "./AnimalDetails/MeasurementsComponent";
+import {  Ionicons } from "@expo/vector-icons";
+import MeasurementTab from "./AnimalDetails/MeasurementTab";
 
 
 export default class AnimalsData extends React.Component {
@@ -101,7 +104,17 @@ export default class AnimalsData extends React.Component {
 					<Mortality {...this.props} />
 					
 				</Tab>
-
+				
+				<Tab
+					heading="Measurements"
+					tabStyle={styles.inActiveTab}
+					textStyle={styles.inActiveText}
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+				>
+					<MeasurementTab {...this.props} />
+					
+				</Tab>
 				<Tab
 					heading="Identification Details"
 					tabStyle={styles.inActiveTab}

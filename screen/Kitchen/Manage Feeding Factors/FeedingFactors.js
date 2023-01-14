@@ -106,7 +106,7 @@ export default class FeedingFactors extends React.Component {
 
   render = () => (
     <Container>
-      <Header title={"FeedingFactors"} addAction={this.gotoAddFeedingFactors} />
+      <Header title={"Feeding Factors"} addAction={this.gotoAddFeedingFactors} />
       <View style={globalStyles.container}>
         {this.state.isLoading ? (
           <Loader />
