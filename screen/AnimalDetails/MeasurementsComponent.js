@@ -41,14 +41,14 @@ const MeasurementsComponent = () => {
                     setValue={HandleSetUOMType}
                     labelStyle={styles.labelName}
                     textFieldStyle={[styles.textfield, UOM ? [styles.width50, { paddingLeft: 0 }] : null,]}
-                    style={[styles.fieldBox]}
+                    style={[style.fieldBox1]}
                 />
                 <View style={style.inputContainer}>
                     <Text style={style.labels}>Matric System :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Mathod  :</Text>
+                    <Text style={style.labels}>Mathod :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
@@ -56,15 +56,15 @@ const MeasurementsComponent = () => {
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Acceptable Lowest  :</Text>
+                    <Text style={style.labels}>Acceptable Lowest :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Target Lowest Value   :</Text>
+                    <Text style={style.labels}>Target Lowest Value :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Comments  :</Text>
+                    <Text style={style.labels}>Comments :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
@@ -105,5 +105,17 @@ const style = StyleSheet.create({
         borderWidth: 0.8,
         borderColor: "#ddd",
     },
+    fieldBox1:{
+        alignItems: "center",
+        width: "100%",
+        overflow: "hidden",
+        flexDirection: "row",
+        padding: 5,
+        borderRadius: 3,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
+        height: "auto",
+        justifyContent: "space-between",
+    }
 })
 export default MeasurementsComponent;

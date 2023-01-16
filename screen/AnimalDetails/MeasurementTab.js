@@ -11,6 +11,7 @@ import { Configs } from '../../config';
 import { Header, } from "../../component";
 
 const MeasurementTab = () => {
+
     const [UOM, setUOM] = useState("")
     const [isUOMTypeMenuOpen, setIsUOMTypeMenuOpen] = useState(false)
 
@@ -37,7 +38,7 @@ const MeasurementTab = () => {
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Head Length  :</Text>
+                    <Text style={style.labels}>Head Length :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
@@ -45,26 +46,39 @@ const MeasurementTab = () => {
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Wing Length  :</Text>
+                    <Text style={style.labels}>Wing Length :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Tail Length   :</Text>
+                    <Text style={style.labels}>Tail Length :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Weight Dead  :</Text>
+                    <Text style={style.labels}>Weight Dead :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Others:</Text>
+                    <Text style={style.labels}>Others :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
                 <View style={style.inputContainer}>
-                    <Text style={style.labels}>Observations:</Text>
+                    <Text style={style.labels}>Observations :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
             </View>
+            <View style={[styles.buttonsContainer, style.btnContainer]}>
+                    <TouchableOpacity activeOpacity={1}>
+                        <Text style={[styles.buttonText, styles.saveBtnText]}>
+                            SAVE
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity activeOpacity={1}>
+                        <Text style={[styles.buttonText, styles.exitBtnText]}>
+                            EXIT
+                        </Text>
+                    </TouchableOpacity>
+                </View>
         </>
     )
 };
@@ -97,6 +111,11 @@ const style = StyleSheet.create({
         width: "100%",
         borderWidth: 0.8,
         borderColor: "#ddd",
+    },
+    btnContainer:{
+        position: "relative",
+        top: 140,
+        left: 9,
     },
 })
 export default MeasurementTab;

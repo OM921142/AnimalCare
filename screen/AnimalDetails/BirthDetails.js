@@ -23,7 +23,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const BirthDetails = (props) => {
     const [show, setShow] = useState(false);
-    const [statusShow, setStatusShow ]= useState(false);
+    const [statusShow, setStatusShow] = useState(false);
     const [date, setDate] = useState(new Date())
     const [statusDate, setStatusDate] = useState(new Date())
     const [Age, setAge] = useState('')
@@ -64,19 +64,82 @@ const BirthDetails = (props) => {
         setIsAnimalStatusMenuOpen(!isAnimalStatusMenuOpen,)
     };
 
-    const handleConfirm = (selectDate) => {
-        setDate(selectDate)
-        if (selectDate) {
-            let birthDate = selectDate
-            var today = new Date();
-            let value = today.getTime() - birthDate.getTime();
-            let age = Math.floor(value / (1000 * 60 * 60 * 24 * 365.25))
-            setAge(age)
-        }
-        hideDatePicker();
+    // const handleConfirm = (selectDate) => {
+    //     setDate(selectDate)
+    //     if (selectDate) {
+    //         let birthDate = selectDate
+    //        let today = new Date();
+    //         let value = today.getTime() - birthDate.getTime();
+    //         let age = Math.floor(value / (1000 * 60 * 60 * 24 * 365))
 
+    //         setAge(age)
+    //     }
+    //     hideDatePicker();
+
+
+    // }
+
+    const getAge = (selectDate) => {
+        setDate(selectDate)
+        let today = new Date();
+        let DOB = new Date(selectDate);
+        let totalMonths = (today.getFullYear() - DOB.getFullYear()) * 12 + today.getMonth() - DOB.getMonth();
+        totalMonths += today.getDay() < DOB.getDay() ? -1 : 0;
+        let years = today.getFullYear() - DOB.getFullYear();
+        if (DOB.getMonth() > today.getMonth())
+            years = years - 1;
+        else if (DOB.getMonth() === today.getMonth())
+            if (DOB.getDate() > today.getDate())
+                years = years - 1;
+
+        let days;
+        let months;
+
+        if (DOB.getDate() > today.getDate()) {
+            months = (totalMonths % 12);
+            if (months == 0)
+                months = 11;
+            let x = today.getMonth();
+            switch (x) {
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12: {
+                    let a = DOB.getDate() - today.getDate();
+                    days = 31 - a;
+                    break;
+                }
+                default: {
+                    let a = DOB.getDate() - today.getDate();
+                    days = 30 - a;
+                    break;
+                }
+            }
+
+        }
+        else {
+            days = today.getDate() - DOB.getDate();
+            if (DOB.getMonth() === today.getMonth())
+                months = (totalMonths % 12);
+            else
+                months = (totalMonths % 12) + 1;
+        }
+        let totalAge = years + months + days;
+        let weeks = totalAge * 52
+        let Age = years + ' years ' + months + ' months ' + days + ' days';
+
+        setAge(Age)
+        console.log("age", Age, weeks, totalAge)
+        hideDatePicker()
+        return Age;
 
     }
+
+
+
 
     const handleConfirmDate = (selectStatusDate) => {
         setStatusDate(selectStatusDate)
@@ -141,7 +204,6 @@ const BirthDetails = (props) => {
         setShowTable(true)
     }
     const handelMotherSection = () => {
-
         let value2 = { enclosure_name: enclosureIDName, section_name: animalSectionName, search_value: searchValue };
         setMother(value2)
         closeSearchModal()
@@ -158,6 +220,7 @@ const BirthDetails = (props) => {
 
     const handleAnimalSection = (v) => {
         setAnimalSectionName(v.name)
+        setIsAnimalSectionMenuOpen(false)
         getCommonNameEnclosures(englishName, v.id)
             .then((data) => {
                 let animalEnclosures = data.map((v, i) => ({
@@ -172,8 +235,8 @@ const BirthDetails = (props) => {
 
     const handelParentEnclosure = (v) => {
         setEnclosureIDName(v.name)
+        setIsAnimalEnclosureMenuOpen(false)
         getCommonNameSections(englishName, v.value).then((response) => {
-            console.log(response, "data")
             let inclosurId = response.map((v) => ({ id: v.id, name: v.enclosure_id }));
             setParentEnclosureID(inclosurId)
         }).catch((error) => console.log(error));
@@ -348,13 +411,26 @@ const BirthDetails = (props) => {
                     </View>
 
                 </View>
+                <View style={styles.buttonsContainer}>
+                    <TouchableOpacity activeOpacity={1} onPress={handleSubmit}>
+                        <Text style={[styles.buttonText, styles.saveBtnText]}>
+                            SAVE
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity activeOpacity={1} onPress={closeSearchModal}>
+                        <Text style={[styles.buttonText, styles.exitBtnText]}>
+                            EXIT
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
 
                 <DateTimePickerModal
                     mode={'date'}
                     display={Platform.OS == 'ios' ? 'inline' : 'default'}
                     isVisible={show}
-                    onConfirm={handleConfirm}
+                    onConfirm={getAge}
                     onCancel={hideDatePicker}
                 />
 
@@ -479,6 +555,7 @@ const BirthDetails = (props) => {
                         </View>
                     </View>
                 </Modal>
+
             </KeyboardAwareScrollView>
         </>
     )

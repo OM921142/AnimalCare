@@ -143,6 +143,19 @@ const Mortality = () => {
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
             </View>
+            <View style={[styles.buttonsContainer, style.btnContainer]}>
+                    <TouchableOpacity activeOpacity={1}>
+                        <Text style={[styles.buttonText, styles.saveBtnText]}>
+                            SAVE
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity activeOpacity={1}>
+                        <Text style={[styles.buttonText, styles.exitBtnText]}>
+                            EXIT
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
             <DateTimePickerModal
                 mode={'date'}
@@ -192,5 +205,10 @@ const style = StyleSheet.create({
         width: "100%",
         borderWidth: 0.8,
         borderColor: "#ddd",
+    },
+    btnContainer:{
+        position: "relative",
+        top: 140,
+        left: 9,
     },
 })
