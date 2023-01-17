@@ -60,7 +60,7 @@ const BirthDetails = (props) => {
         setIsAnimalStatusMenuOpen(false)
     };
 
-    toggleAnimalStatusMenu = () => {
+    const toggleAnimalStatusMenu = () => {
         setIsAnimalStatusMenuOpen(!isAnimalStatusMenuOpen,)
     };
 
@@ -127,14 +127,10 @@ const BirthDetails = (props) => {
             else
                 months = (totalMonths % 12) + 1;
         }
-        let totalAge = years + months + days;
-        let weeks = totalAge * 52
-        let Age = years + ' years ' + months + ' months ' + days + ' days';
-
-        setAge(Age)
-        console.log("age", Age, weeks, totalAge)
         hideDatePicker()
-        return Age;
+       let Days = (years * 365) + (months * 30) + days
+        setAge(Days)
+        console.log("age=======", Days)
 
     }
 
@@ -256,10 +252,19 @@ const BirthDetails = (props) => {
                             <AntDesign name="calendar" color={Colors.primary} size={20} />
                         </TouchableOpacity>
                     </View>
-
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.labels}> Age :</Text>
-                        <TextInput style={styles.inputstyle} autoCapitalize='none'>{Age}</TextInput>
+                    <Text style={style.ageTextBox}>Age</Text>
+                    <View style={style.agebox}>
+                        <TextInput style={[style.AgeInput ]} autoCapitalize='none'>
+                            {Age}
+                        </TextInput>
+                        <TouchableOpacity>
+                        <Text style={style.year}>Years</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                        <Text style={style.month}>Months</Text>
+                        <Text style={style.weeks}>Weeks</Text>
+                        <Text style={[style.days, Age !== "" ? style.daysColor : ""]}>Days</Text>
+                        </TouchableOpacity>
                     </View>
 
                     <InputDropdown
@@ -274,7 +279,7 @@ const BirthDetails = (props) => {
                         labelStyle={styles.labelName}
                         textFieldStyle={[styles.textfield, birthDetailType ? styles.width50 : null,]}
                         style={[
-                            styles.fieldBox,
+                            style.fieldBox,
                             // this.state.isSourceValidationFailed
                             //     ? styles.errorFieldBox
                             //     : null,
@@ -578,6 +583,75 @@ const style = StyleSheet.create({
         position: "relative",
         top: 2,
         right: 50,
+    },
+    AgeInput: {
+        position: "relative",
+        top: 50,
+        right: 33,
+        padding: 7,
+         paddingLeft: "2%",
+        fontWeight: "light",
+        borderWidth: 0.9,
+        borderColor: "#ddd",
+        maxWidth : "20%",
+    },
+    agelabel: {
+        borderWidth: 10,
+
+        position: "relative",
+        top: 0,
+        left: 50,
+
+    },
+    agebox: {
+        position: "relative",
+        bottom: 40,
+        left: 50,
+        height: "10%",
+        
+    },
+    year: {
+        position: "relative",
+        top: 22,
+        left: 50,
+      
+    },
+    month: {
+        position: "relative",
+        bottom: -3,
+        left: 115,
+    },
+    weeks: {
+        position: "relative",
+        bottom: 16,
+        left: 190,
+    },
+    days: {
+        position: "relative",
+        bottom: 34,
+        left: 255,
+    },
+    fieldBox: {
+        alignItems: "center",
+        width: "100%",
+        overflow: "hidden",
+        flexDirection: "row",
+        padding: 5,
+        borderRadius: 3,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
+        backgroundColor: "#fff",
+        height: "auto",
+        justifyContent: "space-between",
+        borderTopWidth: 1,
+    },
+    ageTextBox: {
+        position: "relative",
+        top: 4,
+        left: 25,
+    },
+    daysColor: {
+        color: "green"
     }
 });
 
