@@ -1236,7 +1236,7 @@ const styles = StyleSheet.create({
     width: "auto",
     marginVertical: 1,
     borderColor: "black",
-    alignItems: "baseline",
+     alignItems: "baseline",
 },
 inputContainer: {
     width: "100%",

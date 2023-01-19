@@ -29,6 +29,8 @@ import SourceDetail from "./AnimalDetails/SourceDetail";
 import MeasurementsComponent from "./AnimalDetails/MeasurementsComponent";
 import {  Ionicons } from "@expo/vector-icons";
 import MeasurementTab from "./AnimalDetails/MeasurementTab";
+import Case from "./AnimalDetails/Case";
+import Necropsy from "./AnimalDetails/Necropsy";
 
 
 export default class AnimalsData extends React.Component {
@@ -133,6 +135,26 @@ export default class AnimalsData extends React.Component {
 					activeTextStyle={styles.activeText}
 				>
 					<SourceDetail {...this.props} />
+				</Tab>
+
+				<Tab
+					heading="Case"
+					tabStyle={styles.inActiveTab}
+					textStyle={styles.inActiveText}
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+				>
+					<Case {...this.props} />
+				</Tab>
+
+				<Tab
+					heading="Necropsy"
+					tabStyle={styles.inActiveTab}
+					textStyle={styles.inActiveText}
+					activeTabStyle={styles.activeTab}
+					activeTextStyle={styles.activeText}
+				>
+					<Necropsy {...this.props} />
 				</Tab>
 				{/* <Tab
 					heading="Profile"

@@ -73,10 +73,25 @@ const SourceDetail = () => {
                     <Text style={style.labels}>From Location   :</Text>
                     <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
                 </View>
-                <View style={style.inputContainer}>
-                    <Text style={style.labels}>Remarks  :</Text>
-                    <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
-                </View>
+                <View
+                        style={[
+                            styles.fieldBox,
+                            // this.state.hasDescriptionValidationError
+                            //   ? styles.errorFieldBox
+                            //   : null,
+                        ]}
+                    >
+                        <Text style={styles.labelName}>Remark :</Text>
+                        <TextInput
+                            multiline={true}
+                            // value={entityId}
+                            // onChangeText={(text) => setEntityId(text)}
+                            style={[styles.textfield, styles.width60]}
+                            autoCompleteType="off"
+                            autoCapitalize="words"
+                            maxLength={120}
+                        />
+                    </View>
             </View>
 
         </>

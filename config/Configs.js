@@ -133,6 +133,74 @@ DATA:[
   { id: "Purchase", name: "Purchase", value:"Purchase" },
   { id: "Wild", name: "Wild", value:"Wild" },
 ],
+
+//====Case.js inputfileds data=====>
+COLLECTION_REASON:[
+  { id: "Diagnostic", name: "Diagnostic", value:"Diagnostic" },
+{ id: "Dr Requested", name: "Dr Requested", value:"Dr Requested" },
+{ id: "Examination", name: "Examination", value:"Examination" },
+{ id: "Necropsy", name: "Necropsy", value:"Necropsy" },
+{ id: "Others", name: "Others", value:"Others" },
+{ id: "Pre Shipment", name: "Pre Shipment", value:"Pre Shipment" },
+{ id: "Quarantine Tests", name: "Quarantine Tests", value:"Quarantine Tests" },
+{ id: "Routine", name: "Routine", value:"Routine" },
+] ,
+RESTRAINT:[
+  {id: "Manual", name: "Manual", value:"Manual"},
+  {id: "Others", name: "Others", value:"Others"}
+],
+ ACTIVITY_LEVEL:[
+  {id: "Alert", name: "Alert", value:"Alert"},
+  {id: "Inactive", name: "Inactive", value:"Inactive"},
+  {id: "N/A", name: "N/A", value:"N/A"}
+ ],
+ FASTING:[
+  {id: "< 8 Hours", name: "< 8 Hours", value:"< 8 Hours"},
+  {id: "> 48 Hours", name: "> 48 Hours", value:"> 48 Hours"},
+  {id: "> 24-48 Hours", name: "> 24-48 Hours", value:"> 24-48 Hours"},
+  {id: "> 8 to 24 Hours", name: "> 8 to 24 Hours", value:"> 8 to 24 Hours"},
+  {id: "N/A", name: "N/A", value:"N/A"}
+ ],
+ ANIMAL_HEALTH:[
+  {id: "Abnormal", name: "Abnormal", value:"Abnormal"},
+  {id: "Normal", name: "Normal", value:"Normal"},
+  {id: "Un Known", name: "Un Known", value:"Un Known"},
+  {id: "Deceased", name: "Deceased", value:"Deceased"}
+ ],
+ SAMPLE_TYPE:[
+  {id: "Blood", name: "Blood", value:"Blood"},
+  {id: "Bone", name: "Bone", value:"Bone"},
+  {id: "Culture", name: "Culture", value:"Culture"},
+  {id: "Embryo", name: "Embryo", value:"Embryo"},
+  {id: "Fecal", name: "Fecal", value:"Fecal"},
+  {id: "Fecal Sample", name: "Fecal Sample", value:"Fecal Sample"},
+  {id: "GI", name: "GI", value:"GI"},
+  {id: "Hair", name: "Hair", value:"Hair"}
+ ],
+ SAMPLE_SITE:[
+  {id: "Fecal", name: "Fecal", value:"Fecal"},
+  {id: "Fluid", name: "Fluid", value:"Fluid"},
+  {id: "Fur", name: "Fur", value:"Fur"},
+  {id: "Left Leg", name: "Left Leg", value:"Left Leg"},
+  {id: "Right Leg", name: "Right Leg", value:"Right Leg"},
+  {id: "Others", name: "Others", value:"Others"},
+ ],
+
+//====Necropsy.js inputfiled data :-
+Histopathology:[
+{ id: "Yes", name: "Yes", value:"Yes" },
+{ id: "No", name: "No", value:"No" },
+],
+LAB_REQUEST:[
+{ id: "Yes", name: "Yes", value:"Yes" },
+{ id: "No", name: "No", value:"No" },
+],
+Measurements:[
+{ id: "Yes", name: "Yes", value:"Yes" },
+{ id: "No", name: "No", value:"No" },
+],
+
+
   ANIMAL_STATUS: [
     { id: "Alive", name: "Alive", value: "Alive" },
     { id: "Dead", name: "Dead", value: "Dead" },

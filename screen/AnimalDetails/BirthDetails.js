@@ -7,6 +7,7 @@ import {
     TextInput,
     TouchableOpacity,
     Modal,
+    Dimensions,
 } from 'react-native';
 import { DataTable } from 'react-native-paper';
 import Colors from "../../config/colors";
@@ -19,12 +20,15 @@ import Configs from "../../config/Configs";
 import InputDropdown from "../../component/InputDropdown";
 import { getCommonNameEnclosures, getCommonNameSections, } from "../../services/APIServices";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import moment from 'moment';
 
 
 const BirthDetails = (props) => {
     const [show, setShow] = useState(false);
+    const [showIput, setShowIput] = useState(false);
     const [statusShow, setStatusShow] = useState(false);
     const [date, setDate] = useState(new Date())
+    const [NewDate, setNewDate] = useState('')
     const [statusDate, setStatusDate] = useState(new Date())
     const [Age, setAge] = useState('')
     const [birthDetailType, setBirthDetailType] = useState("");
@@ -46,6 +50,10 @@ const BirthDetails = (props) => {
     const [showTable, setShowTable] = useState(false)
     const [showTableMother, setShowTableMother] = useState(false)
     const [animal_status, setAnimalStatus] = useState(false)
+    const [year, setYears] = useState(false)
+    const [month, setMonth] = useState(false)
+    const [week, setWeek] = useState(false)
+    const [day, setDay] = useState(false)
     const [isAnimalStatusMenuOpen, setIsAnimalStatusMenuOpen] = useState(false)
 
     let context = useContext(AppContext);
@@ -64,20 +72,48 @@ const BirthDetails = (props) => {
         setIsAnimalStatusMenuOpen(!isAnimalStatusMenuOpen,)
     };
 
-    // const handleConfirm = (selectDate) => {
-    //     setDate(selectDate)
-    //     if (selectDate) {
-    //         let birthDate = selectDate
-    //        let today = new Date();
-    //         let value = today.getTime() - birthDate.getTime();
-    //         let age = Math.floor(value / (1000 * 60 * 60 * 24 * 365))
 
-    //         setAge(age)
-    //     }
-    //     hideDatePicker();
+    const handleConfirmYears = () => {
+        setYears(true)
+        setMonth(false)
+        setWeek(false)
+        setDay(false)
+        let startdate = moment();
+        startdate = startdate.subtract(NewDate, "years");
+        setDate(startdate)
+    }
 
+    const handleConfirmMonths = () => {
+        setMonth(true)
+        setYears(false)
+        setWeek(false)
+        setDay(false)
+        let startdate = moment();
+        startdate = startdate.subtract(NewDate, "months");
+        setDate(startdate)
+    }
 
-    // }
+    const handleConfirmWeeks = () => {
+        setMonth(false)
+        setYears(false)
+        setWeek(true)
+        setDay(false)
+        setShowIput(true , "weeks")
+        let startdate = moment();
+        startdate = startdate.subtract(NewDate, "weeks");
+        setDate(startdate)
+    }
+
+    const handleConfirmDays = () => {
+        setMonth(false)
+        setYears(false)
+        setWeek(false)
+        setDay(true)
+        setShowIput(true, "days")
+        let startdate = moment();
+        startdate = startdate.subtract(NewDate, "days");
+         setDate(startdate)
+    }
 
     const getAge = (selectDate) => {
         setDate(selectDate)
@@ -128,13 +164,14 @@ const BirthDetails = (props) => {
                 months = (totalMonths % 12) + 1;
         }
         hideDatePicker()
-       let Days = (years * 365) + (months * 30) + days
+        let Days = (years * 365) + (months * 30) + days
         setAge(Days)
-        console.log("age=======", Days)
-
+        hideDatePicker();
+        setMonth(false)
+        setYears(false)
+        setWeek(false)
+        setDay(true)
     }
-
-
 
 
     const handleConfirmDate = (selectStatusDate) => {
@@ -241,29 +278,32 @@ const BirthDetails = (props) => {
 
     return (
         <>
-            <KeyboardAwareScrollView extraHeight={120}>
-
+            <KeyboardAwareScrollView extraHeight={"auto"}>
                 <View style={styles.mainContainer}>
 
                     <View style={[styles.fieldBox]}>
                         <Text style={styles.labelName}>Date of Birth: </Text>
                         <TouchableOpacity activeOpacity={1} style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }} onPress={() => { ShowDatePicker("dob") }}>
-                            <Text style={styles.dateField}>{date.toDateString()}</Text>
+                        <Text style={styles.dateField}>{moment(date).format("ddd DD-MMM-YYYY")}</Text>
                             <AntDesign name="calendar" color={Colors.primary} size={20} />
                         </TouchableOpacity>
                     </View>
                     <Text style={style.ageTextBox}>Age</Text>
                     <View style={style.agebox}>
-                        <TextInput style={[style.AgeInput ]} autoCapitalize='none'>
+                        <TextInput style={style.AgeInput} autoCapitalize='none' onChangeText={(text) => setNewDate(text)} keyboardType={'numeric'}>
                             {Age}
                         </TextInput>
                         <TouchableOpacity>
-                        <Text style={style.year}>Years</Text>
+                            <Text style={[style.year ,  year == true ? style.DateColor : ""]} onPress={() => { handleConfirmYears("years") }}>Years</Text>
                         </TouchableOpacity>
                         <TouchableOpacity>
-                        <Text style={style.month}>Months</Text>
-                        <Text style={style.weeks}>Weeks</Text>
-                        <Text style={[style.days, Age !== "" ? style.daysColor : ""]}>Days</Text>
+                            <Text style={[style.month ,  month == true ? style.DateColor : ""]} onPress={() => { handleConfirmMonths("months") }}>Months</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={[style.weeks,    week == true ? style.DateColor : ""]} onPress={() => { handleConfirmWeeks("weeks") }}>Weeks</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={[style.days  ,  day == true ? style.DateColor : ""]} onPress={() => { handleConfirmDays("days") }}>Days</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -374,8 +414,8 @@ const BirthDetails = (props) => {
                         ]}
                     />
                     <View style={styles.inputContainer}>
-                        <Text style={styles.labels}>Birth waight :</Text>
-                        <TextInput style={styles.inputstyle} autoCapitalize='none'></TextInput>
+                        <Text style={styles.labels}>Birth weight :</Text>
+                        <TextInput style={styles.inputstyle} autoCapitalize='none' keyboardType={'numeric'}></TextInput>
                     </View>
 
                     <View style={styles.inputContainer}>
@@ -404,7 +444,7 @@ const BirthDetails = (props) => {
 
                     <View style={[styles.fieldBox,]}>
                         <Text style={styles.labelName}>Status change date: </Text>
-                        <TouchableOpacity activeOpacity={1} style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }} onPress={() => { StatusChangeDtae() }}>
+                        <TouchableOpacity activeOpacity={1} style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }} onPress={() => { StatusChangeDtae("dob") }}>
                             <Text style={styles.dateField}>{statusDate.toDateString()}</Text>
                             <AntDesign name="calendar" color={Colors.primary} size={20} />
                         </TouchableOpacity>
@@ -414,9 +454,8 @@ const BirthDetails = (props) => {
                         <Text style={styles.labels}>Comment on Status :</Text>
                         <TextInput style={styles.inputstyle} autoCapitalize='none'></TextInput>
                     </View>
-
                 </View>
-                <View style={styles.buttonsContainer}>
+                <View style={style.btnContainer}>
                     <TouchableOpacity activeOpacity={1} onPress={handleSubmit}>
                         <Text style={[styles.buttonText, styles.saveBtnText]}>
                             SAVE
@@ -430,6 +469,7 @@ const BirthDetails = (props) => {
                     </TouchableOpacity>
                 </View>
 
+                </KeyboardAwareScrollView>
 
                 <DateTimePickerModal
                     mode={'date'}
@@ -561,7 +601,7 @@ const BirthDetails = (props) => {
                     </View>
                 </Modal>
 
-            </KeyboardAwareScrollView>
+           
         </>
     )
 };
@@ -582,54 +622,58 @@ const style = StyleSheet.create({
     ionicons: {
         position: "relative",
         top: 2,
-        right: 50,
+        right: 1,
     },
     AgeInput: {
-        position: "relative",
-        top: 50,
-        right: 33,
-        padding: 7,
-         paddingLeft: "2%",
-        fontWeight: "light",
         borderWidth: 0.9,
         borderColor: "#ddd",
-        maxWidth : "20%",
+        padding: 8,
+        marginLeft:10,
+        width:50,
+        height:38,
     },
     agelabel: {
         borderWidth: 10,
-
         position: "relative",
         top: 0,
         left: 50,
 
     },
     agebox: {
-        position: "relative",
-        bottom: 40,
-        left: 50,
+         alignItems:"center",
+        flexDirection:"row",
+        borderwitdh:10,
+        borderColor:"black",
+        justifyContent:"space-between",
+        maxWidth: "60%",
         height: "10%",
         
     },
     year: {
-        position: "relative",
-        top: 22,
-        left: 50,
-      
+        borderWidth: 0.9,
+        borderColor: "#ddd",
+        padding: 8,
+        marginLeft:10,
     },
     month: {
-        position: "relative",
-        bottom: -3,
-        left: 115,
+        borderWidth: 0.9,
+        borderColor: "#ddd",
+        padding:8,
+        marginLeft:20,
     },
     weeks: {
-        position: "relative",
-        bottom: 16,
-        left: 190,
+        marginLeft:20,
+        borderWidth: 0.9,
+        borderColor: "#ddd",
+        padding:8,
+        
     },
     days: {
-        position: "relative",
-        bottom: 34,
-        left: 255,
+        borderWidth: 0.9,
+        borderColor: "#ddd",
+        maxWidth: "89%",
+        marginLeft:20,
+        padding:8,
     },
     fieldBox: {
         alignItems: "center",
@@ -644,14 +688,26 @@ const style = StyleSheet.create({
         height: "auto",
         justifyContent: "space-between",
         borderTopWidth: 1,
+        // marginLeft:20,
     },
     ageTextBox: {
-        position: "relative",
-        top: 4,
-        left: 25,
+        top: 15,
+        left: 8,
+        marginRight:10,
     },
     daysColor: {
         color: "green"
+    },
+    DateColor: {
+        color: "green",
+        backgroundColor:"#ddd"
+    },
+    btnContainer:{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        marginVertical:"30%",
+        marginTop:15,
     }
 });
 

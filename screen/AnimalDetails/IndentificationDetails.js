@@ -10,7 +10,7 @@ import styles from "../../config/Styles";
 import Configs from "../../config/Configs";
 import { DateTimePickerModal } from 'react-native-modal-datetime-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { DatePicker, InputDropdown } from "../../component";
+import { InputDropdown } from "../../component";
 import {
     getAnimalGroups,
     getAllCategory,
@@ -25,15 +25,16 @@ const IdentificationDetail = () => {
     const [dob, setDob] = useState(new Date());
     const [type, setType] = useState("");
     const context = useContext(AppContext);
+    const [entityId, setEntityId] = useState("");
     const [animalGroupsType, setAnimalGroupsType] = useState("");
     const [isAnimalsGroupsTypeMenuOpen, setIsAnimalGroupsTypeMenuOpen] = useState(false);
-    const [animalGroups, setAnimalGroups] = useState([])
+    const [animalGroups, setAnimalGroups] = useState([]);
     const [categoryType, setCategoryType] = useState("");
     const [iscategoryTypeMenuOpen, setIsCategoryTypeMenuOpen] = useState(false);
-    const [category, setCategory] = useState([])
+    const [category, setCategory] = useState([]);
     const [subCategoryType, setSubCategoryType] = useState("");
     const [isSubCategoryTypeMenuOpen, setIsSubCategoryTypeMenuOpen] = useState(false);
-    const [subCategory, setSubCategory] = useState([])
+    const [subCategory, setSubCategory] = useState([]);
     const [commonNameType, setCommonNameType] = useState("");
     const [isCommonNameTypeMenuOpen, setIsCommonNameTypeMenuOpen] = useState(false);
     const [commonName, setCommonName] = useState([]);
@@ -70,12 +71,21 @@ const IdentificationDetail = () => {
         setShow(false)
     }
 
+    console.log(entityId, "hello=====>")
+
     //=========>this functions for category ====> 
     const HandleSetAnimalGroupsType = (v) => {
         let cid = context.userDetails.cid;
         setAnimalGroupsType(v.name);
         setIsAnimalGroupsTypeMenuOpen(false);
+        setCategoryType("");
+        setSubCategoryType("");
+        setCommonNameType("");
+        setScientificNameType("");
+
         getAllCategory(cid, v.id).then((response) => {
+            console.log(response, "categroy==>")
+
             let Category = response.map((v) => ({ id: v.id, name: v.cat_name }));
             setCategory(Category);
         }).catch((error) => console.log(error));
@@ -83,12 +93,15 @@ const IdentificationDetail = () => {
     const toggleAnimalGroupsTypeMenu = () => {
         setIsAnimalGroupsTypeMenuOpen(!isAnimalsGroupsTypeMenuOpen)
     };
+   
+    console.log(setEntityId, "heeeelo==>")
 
     //===>this Function for Subcategory==>
     const HandleSetCategoryType = (v) => {
         let cid = context.userDetails.cid;
         setCategoryType(v.name);
         setIsCategoryTypeMenuOpen(false);
+        setSubCategoryType("");
         getAllSubCategory(cid, v.id).then((response) => {
             let SubCategory = response.map((v) => ({ id: v.id, name: v.cat_name }));
             setSubCategory(SubCategory);
@@ -97,13 +110,12 @@ const IdentificationDetail = () => {
     const toggleCategoryTypeMenu = () => {
         setIsCategoryTypeMenuOpen(!iscategoryTypeMenuOpen)
     };
-    //===>this Function for Common Name==>
+    //===>this Function for Subcategory Name==>
     const HandleSetSubCategoryType = (v) => {
         let cid = context.userDetails.cid;
         setSubCategoryType(v.name);
         setIsSubCategoryTypeMenuOpen(false);
-        getCommonNames(cid, v.id).then((response) => {
-            console.log(response, "resp===>");
+        getCommonNames({ cid: cid, sub_category: v.id }).then((response) => {
             let CommonName = response.map((v) => ({ id: v.id, name: v.common_name, scientific_name: v.scientific_name }));
             setCommonName(CommonName);
         }).catch((error) => console.log(error));
@@ -184,16 +196,13 @@ const IdentificationDetail = () => {
         let value = { showSection: selectSectionType, searchValue: searchValue }
         let arr = showIdentification;
         arr.push(value);
-        setShowIdentification(arr)
-        // console.log(showIdentification, "vall===")
-        setShowTable(true)
+        setShowIdentification(arr);
+        setShowTable(true);
     };
 
     const HandleCancel = () => {
-        setIsIdentificationModalOpen(false)
+        setIsIdentificationModalOpen(false);
     }
-
-
 
     useEffect(() => {
         let cid = context.userDetails.cid;
@@ -220,9 +229,24 @@ const IdentificationDetail = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={style.inputContainer}>
-                        <Text style={style.labels}>Entity ID :</Text>
-                        <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
+                    <View
+                        style={[
+                            styles.fieldBox,
+                            // this.state.hasDescriptionValidationError
+                            //   ? styles.errorFieldBox
+                            //   : null,
+                        ]}
+                    >
+                        <Text style={styles.labelName}>Entity ID :</Text>
+                        <TextInput
+                            multiline={true}
+                             value={entityId}
+                            onChangeText={(text) => setEntityId(text)}
+                            style={[styles.textfield, styles.width60]}
+                            autoCompleteType="off"
+                            autoCapitalize="words"
+                            maxLength={120}
+                        />
                     </View>
 
                     <InputDropdown
@@ -288,7 +312,7 @@ const IdentificationDetail = () => {
 
                     <View style={style.inputContainer}>
                         <Text style={style.labels}>Scientific Name :</Text>
-                        <TextInput style={style.inputstyle} autoCapitalize='none' value={ScientificNameType}></TextInput>
+                        <TextInput style={style.ScientificInputstyle} autoCapitalize='none' value={ScientificNameType}></TextInput>
                     </View>
 
                     <InputDropdown
@@ -345,7 +369,7 @@ const IdentificationDetail = () => {
 
                     <View style={style.inputContainer}>
                         <Text style={style.labels}>Given Name :</Text>
-                        <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
+                        <TextInput style={style.GivenInputstyle} autoCapitalize='none'></TextInput>
                     </View>
 
                     <TouchableOpacity
@@ -364,27 +388,37 @@ const IdentificationDetail = () => {
                         <Ionicons name="add" size={26} color="black" style={style.ionicons} />
                     </TouchableOpacity>
                     {showTable == true ? (
-                            <DataTable style={style.Table_container}>
-                                <DataTable.Header style={styles.tableHeader}>
-                                    <DataTable.Title> Section name</DataTable.Title>
-                                    <DataTable.Title>Code</DataTable.Title>
-                                </DataTable.Header>
-                                {showIdentification?.map((data, index) => {
-                                    return (
-                                        <DataTable.Row key={index}>
-                                            <DataTable.Cell>{data.showSection}</DataTable.Cell>
-                                            <DataTable.Cell>{data.searchValue}</DataTable.Cell>
-                                        </DataTable.Row>
-                                    );
-                                })}
-                            </DataTable>
-                        ) : null}
+                        <DataTable style={style.Table_container}>
+                            <DataTable.Header style={styles.tableHeader}>
+                                <DataTable.Title> Section name</DataTable.Title>
+                                <DataTable.Title>Code</DataTable.Title>
+                            </DataTable.Header>
+                            {showIdentification?.map((data, index) => {
+                                return (
+                                    <DataTable.Row key={index}>
+                                        <DataTable.Cell>{data.showSection}</DataTable.Cell>
+                                        <DataTable.Cell>{data.searchValue}</DataTable.Cell>
+                                    </DataTable.Row>
+                                );
+                            })}
+                        </DataTable>
+                    ) : null}
 
                     <View style={style.inputContainer}>
                         <Text style={style.labels}>Govt Reg # :</Text>
-                        <TextInput style={style.inputstyle} autoCapitalize='none'></TextInput>
+                        <TextInput style={style.GovtInputstyle} autoCapitalize='none'></TextInput>
                     </View>
                 </View>
+                <TouchableOpacity
+                    style={[style.SaveBtn, { width: "40%" }]}
+                >
+                    <Text style={{ color: Colors.white, fontSize: Colors.lableSize, }} onPress={HandleSave}>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[style.CancelBtn, { width: "40%" }]}
+                >
+                    <Text style={{ color: Colors.white, fontSize: Colors.lableSize, }} onPress={HandleCancel}>Cancel</Text>
+                </TouchableOpacity>
                 <DateTimePickerModal
                     mode={'date'}
                     display={Platform.OS == 'ios' ? 'inline' : 'default'}
@@ -460,15 +494,15 @@ const IdentificationDetail = () => {
                                     justifyContent: "space-around",
                                 }}
                             >
-                                <TouchableOpacity
-                                    style={[styles.button, { width: "45%" }]}
-                                >
-                                    <Text style={{ color: Colors.white, fontSize: Colors.lableSize, }} onPress={HandleSave}>Save</Text>
+                                <TouchableOpacity activeOpacity={1} onPress={HandleSave}>
+                                    <Text style={[styles.buttonText, styles.saveBtnText]}>
+                                        SAVE
+                                    </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[styles.button, { width: "45%" }]}
-                                >
-                                    <Text style={{ color: Colors.white, fontSize: Colors.lableSize, }} onPress={HandleCancel}>Cancel</Text>
+                                <TouchableOpacity activeOpacity={1} onPress={HandleCancel}>
+                                    <Text style={[styles.buttonText, styles.exitBtnText]}>
+                                        CANCEL
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -492,6 +526,9 @@ const style = StyleSheet.create({
     inputContainer: {
         width: "100%",
     },
+    width60: {
+        width: "60%",
+    },
 
     labels: {
         position: "absolute",
@@ -500,13 +537,12 @@ const style = StyleSheet.create({
         fontSize: Colors.lableSize,
     },
 
-    inputstyle: {
+    GivenInputstyle: {
         position: "relative",
         top: -1,
         left: 0,
         padding: 7,
-        paddingLeft: 130,
-        fontWeight: "bold",
+        paddingLeft: 180,
         width: "100%",
         borderWidth: 0.8,
         borderColor: "#ddd",
@@ -514,9 +550,61 @@ const style = StyleSheet.create({
     ionicons: {
         position: "relative",
         top: 2,
-        right: 180,
+        right: 140,
     },
- 
+    EntityInupt: {
+        position: "relative",
+        top: -1,
+        left: 0,
+        padding: 7,
+        paddingLeft: 180,
+        width: "100%",
+        borderWidth: 0.8,
+        borderColor: "#ddd",
+    },
+    ScientificInputstyle: {
+        position: "relative",
+        top: -1,
+        left: 0,
+        padding: 7,
+        paddingLeft: 180,
+        width: "100%",
+        borderWidth: 0.8,
+        borderColor: "#ddd",
+    },
+    GovtInputstyle: {
+        position: "relative",
+        top: -1,
+        left: 0,
+        padding: 7,
+        paddingLeft: 180,
+        width: "100%",
+        borderWidth: 0.8,
+        borderColor: "#ddd",
+    },
+    SaveBtn: {
+        position: "relative",
+        top: 28,
+        left: 15,
+        alignItems: "center",
+        backgroundColor: Colors.primary,
+        padding: 10,
+        borderRadius: 20,
+        color: "#fff",
+        marginTop: 15,
+    },
+    CancelBtn: {
+        position: "relative",
+        bottom: 28,
+        left: 180,
+        alignItems: "center",
+        backgroundColor: Colors.primary,
+        padding: 10,
+        borderRadius: 20,
+        color: "#fff",
+        marginTop: 15,
+    },
+
 })
 
 export default IdentificationDetail;
